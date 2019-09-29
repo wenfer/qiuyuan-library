@@ -13,18 +13,17 @@ import java.util.List;
  * @author qiuyuan
  * @since 1.0
  */
-public interface Queryer<F, R> {
+public interface Queryer<R> {
 
-    void setWhere(Where<F> where);
+    void setWhere(Where where);
 
-    Where<F> where();
+    Where where();
 
-    /**
-     * 查询单个结果
-     */
+    Where join(String property);
+
     R findOne();
 
     List<R> findAll();
 
-    <SF, SR> SubQueryer<SF, SR> subQuery(String property, Class<SF> from, Class<SR> result);
+    <SF, SR> SubQueryer<SR> subQuery(String property, Class<SF> from, Class<SR> result);
 }

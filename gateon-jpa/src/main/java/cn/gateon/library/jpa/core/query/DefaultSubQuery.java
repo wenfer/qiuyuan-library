@@ -12,24 +12,24 @@ import javax.persistence.criteria.Subquery;
  * @author qiuyuan
  * @since 1.0
  */
-public class DefaultSubQuery<F,R> implements SubQueryer<F,R> {
+public class DefaultSubQuery<R> implements SubQueryer<R> {
 
-    private Where<F> where;
+    private Where where;
 
     private Subquery<R> subquery;
 
-    public DefaultSubQuery(Where<F> where) {
+    public DefaultSubQuery(Where where,Subquery<R> subquery) {
         this.where = where;
+        this.subquery = subquery;
     }
 
     @Override
-    public Where<F> where() {
+    public Where where() {
         return where;
     }
 
     @Override
     public Subquery<R> getQuery() {
-        where.build(subquery);
         return subquery;
     }
 }

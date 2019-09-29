@@ -11,9 +11,9 @@ import javax.persistence.criteria.Subquery;
  * @author qiuyuan
  * @since 1.0
  */
-public interface SubQueryer<F, R> {
+public interface SubQueryer<R> {
 
-    Where<F> where();
+    Where where();
 
     Subquery<R> getQuery();
 }

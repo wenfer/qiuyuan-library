@@ -1,13 +1,12 @@
 package cn.gateon.library.jpa.repo;
 
-import cn.gateon.library.jpa.core.criterion.Searcher;
-import cn.gateon.library.jpa.core.impl.DefaultSearcher;
+import cn.gateon.library.jpa.core.Queryer;
+import cn.gateon.library.jpa.core.query.DefaultQuery;
+import cn.gateon.library.jpa.core.query.MultiSumQuery;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 
 /**
@@ -26,12 +25,14 @@ public class GateonRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
         this.entityManager = entityManager;
     }
 
+    @Override
+    public Queryer<T> queryer() {
+        return new DefaultQuery<>(entityManager, entityInformation.getJavaType());
+    }
 
     @Override
-    public Searcher<T> searcher() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        Class<T> javaType = entityInformation.getJavaType();
-        return new DefaultSearcher<>(entityManager, criteriaBuilder, javaType);
+    public <R> Queryer<R> multiSum(Class<R> clazz) {
+        return new MultiSumQuery<>(entityManager,entityInformation.getJavaType(),clazz);
     }
 
 

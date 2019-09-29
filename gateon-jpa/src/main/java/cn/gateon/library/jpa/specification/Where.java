@@ -1,8 +1,5 @@
 package cn.gateon.library.jpa.specification;
 
-import javax.persistence.criteria.AbstractQuery;
-import javax.persistence.criteria.CriteriaQuery;
-
 /**
  * <p>
  * </p>
@@ -12,8 +9,10 @@ import javax.persistence.criteria.CriteriaQuery;
  */
 public interface Where<F> {
 
-    Where<F> is(String property,Object value);
+    Where<F> is(String property, Object value);
 
+    Where<F> gte(String property, Number value);
 
-   void build(AbstractQuery query);
+    Where<F> lte(String property, Number value);
+
 }

@@ -2,11 +2,10 @@ package cn.gateon.library.jpa.specification.impl;
 
 import cn.gateon.library.jpa.specification.Where;
 
-import javax.persistence.criteria.AbstractQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,29 +15,36 @@ import java.util.List;
  * @author qiuyuan
  * @since 1.0
  */
-public class WhereImpl<F> implements Where<F> {
+public class WhereImpl<F, R> implements Where {
 
-    private final List<Predicate> predicates = new ArrayList<>();
+    private final List<Predicate> predicates;
 
     private final CriteriaBuilder cb;
 
-    private final Root<F> root;
+    private final From<F, R> root;
 
-    public WhereImpl(CriteriaBuilder cb, Root<F> root) {
+    public WhereImpl(CriteriaBuilder cb, From<F, R> root, List<Predicate> predicates) {
+        this.predicates = predicates;
         this.cb = cb;
         this.root = root;
     }
 
     @Override
-    public Where<F> is(String property, Object value) {
+    public Where is(String property, Object value) {
         predicates.add(cb.equal(root.get(property), value));
         return this;
     }
 
     @Override
-    public void build(AbstractQuery query) {
-        Predicate[] predicateArray = new Predicate[this.predicates.size()];
-        Predicate[] predicates = this.predicates.toArray(predicateArray);
-        query.where(predicates);
+    public Where gte(String property, Number value) {
+        predicates.add(cb.ge(root.get(property), value));
+        return this;
     }
+
+    @Override
+    public Where lte(String property, Number value) {
+        predicates.add(cb.le(root.get(property), value));
+        return this;
+    }
+
 }
