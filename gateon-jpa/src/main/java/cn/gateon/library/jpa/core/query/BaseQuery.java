@@ -1,9 +1,14 @@
 package cn.gateon.library.jpa.core.query;
 
+import cn.gateon.library.common.data.Page;
+import cn.gateon.library.common.data.PageRequest;
 import cn.gateon.library.jpa.core.Queryer;
 import cn.gateon.library.jpa.core.SubQueryer;
 import cn.gateon.library.jpa.specification.Where;
 import cn.gateon.library.jpa.specification.impl.WhereImpl;
+import org.hibernate.query.criteria.internal.OrderImpl;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -66,6 +71,29 @@ public class BaseQuery<F, R> implements Queryer<R> {
         return new WhereImpl<>(cb, join, predicates);
     }
 
+
+
+    @Override
+    public Page<R> page(PageRequest pageRequest) {
+        String sort = pageRequest.getSort();
+        if(StringUtils.isEmpty(sort)){
+            query.orderBy(new OrderImpl(root.get(sort),pageRequest.getAsc()));
+        }
+        query().setMaxResults(pageRequest.getSize());
+        query().setFirstResult(pageRequest.getPage() * pageRequest.getSize());
+        List<R> resultList = query().getResultList();
+        return new Page<>(resultList, pageRequest, count());
+    }
+
+    @Override
+    public long count() {
+        CriteriaQuery<Long> count = cb.createQuery(Long.class);
+        build(count);
+        join(count);
+        TypedQuery<Long> countQuery = entityManager.createQuery(count);
+        return countQuery.getSingleResult();
+    }
+
     @Override
     public R findOne() {
         return query().getSingleResult();
@@ -81,5 +109,22 @@ public class BaseQuery<F, R> implements Queryer<R> {
         Subquery<SR> subquery = query.subquery(result);
         Root<SF> sfRoot = subquery.from(from);
         return new DefaultSubQuery<>(new WhereImpl<>(cb, sfRoot, predicates), subquery);
+    }
+
+
+    private void join(CriteriaQuery criteriaQuery) {
+        Root from = criteriaQuery.from(root.getJavaType());
+        if (!CollectionUtils.isEmpty(root.getJoins())) {
+            for (Join<F, ?> join : root.getJoins()) {
+                from.join(join.getAttribute().getName(), join.getJoinType());
+            }
+        }
+    }
+
+    private AbstractQuery build(AbstractQuery query) {
+        Predicate[] predicateArray = new Predicate[this.predicates.size()];
+        Predicate[] predicates = this.predicates.toArray(predicateArray);
+        query.where(predicates);
+        return query;
     }
 }

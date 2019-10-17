@@ -1,5 +1,7 @@
 package cn.gateon.library.jpa.core;
 
+import cn.gateon.library.common.data.Page;
+import cn.gateon.library.common.data.PageRequest;
 import cn.gateon.library.jpa.specification.Where;
 
 import java.util.List;
@@ -8,7 +10,7 @@ import java.util.List;
  * <p>
  * 查询器
  *
- * @param <T> 结果类型
+ * @param <R> 结果类型
  *            </p>
  * @author qiuyuan
  * @since 1.0
@@ -20,6 +22,10 @@ public interface Queryer<R> {
     Where where();
 
     Where join(String property);
+
+    Page<R> page(PageRequest pageRequest);
+
+    long count();
 
     R findOne();
 
