@@ -1,8 +1,8 @@
 package cn.gateon.library.jpa.core;
 
-import cn.gateon.library.common.data.Page;
-import cn.gateon.library.common.data.PageRequest;
 import cn.gateon.library.jpa.specification.Where;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -21,15 +21,17 @@ public interface Queryer<R> {
 
     Where where();
 
+    void orderBy(String property, boolean asc);
+
     Where join(String property);
-
-    Page<R> page(PageRequest pageRequest);
-
-    long count();
 
     R findOne();
 
     List<R> findAll();
+
+    long count();
+
+    Page<R> find(Pageable pageable);
 
     <SF, SR> SubQueryer<SR> subQuery(String property, Class<SF> from, Class<SR> result);
 }
