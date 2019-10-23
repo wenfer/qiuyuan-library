@@ -1,10 +1,10 @@
 package cn.gateon.library.jpa.repo;
 
+import cn.gateon.library.jpa.core.Queryer;
+import cn.gateon.library.jpa.core.query.DefaultQuery;
+import cn.gateon.library.jpa.core.query.MultiSumQuery;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import site.qiuyuan.base4jpa.core.Queryer;
-import site.qiuyuan.base4jpa.core.query.DefaultQuery;
-import site.qiuyuan.base4jpa.core.query.MultiSumQuery;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;

@@ -1,6 +1,6 @@
 package cn.gateon.library.jpa;
 
-import cn.gateon.library.jpa.repo.GateonRepositoryImpl;
+import cn.gateon.library.jpa.repo.BaseRepositoryImpl;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.lang.annotation.*;
@@ -15,6 +15,6 @@ import java.lang.annotation.*;
 @Inherited
 @EnableJpaRepositories(
         value = {"**.repository.**", "**.model.**"},
-        repositoryBaseClass = GateonRepositoryImpl.class)
+        repositoryBaseClass = BaseRepositoryImpl.class)
 public @interface EnableJPA {
 }
