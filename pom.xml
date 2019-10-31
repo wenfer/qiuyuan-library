@@ -19,6 +19,7 @@
         <version>2.2.0.RELEASE</version>
         <relativePath/>
     </parent>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -47,4 +48,5 @@
             <url>https://repo.rdc.aliyun.com/repository/103513-snapshot-WoY8UX/</url>
         </snapshotRepository>
     </distributionManagement>
+
 </project>

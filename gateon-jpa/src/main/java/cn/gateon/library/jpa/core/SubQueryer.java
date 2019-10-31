@@ -1,5 +1,6 @@
 package cn.gateon.library.jpa.core;
 
+
 import cn.gateon.library.jpa.specification.Where;
 
 import javax.persistence.criteria.Subquery;

@@ -13,13 +13,13 @@ import java.io.Serializable;
  * @author qiuyuan
  * @since 1.0
  */
-public class GateonRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements GateonRepository<T, ID> {
+public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> implements BaseRepository<T, ID> {
 
     private final JpaEntityInformation<T, ?> entityInformation;
 
     private EntityManager entityManager;
 
-    public GateonRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
+    public BaseRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
         this.entityInformation = entityInformation;
         this.entityManager = entityManager;
@@ -32,7 +32,7 @@ public class GateonRepositoryImpl<T, ID extends Serializable> extends SimpleJpaR
 
     @Override
     public <R> Queryer<R> multiSum(Class<R> clazz) {
-        return new MultiSumQuery<>(entityManager,entityInformation.getJavaType(),clazz);
+        return new MultiSumQuery<>(entityManager, entityInformation.getJavaType(), clazz);
     }
 
 

@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @since 1.0
  */
 @NoRepositoryBean
-public interface GateonRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
+public interface BaseRepository<T, ID extends Serializable> extends JpaRepository<T, ID> {
 
     /**
      * 获取查询器

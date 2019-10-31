@@ -3,16 +3,18 @@ package cn.gateon.library.common.rest;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 /**
+ * <p>
+ * </p>
+ *
  * @author qiuyuan
+ * @since 1.0
  */
 @Setter
 @Getter
-public class Result<T> implements Serializable {
+public class Result<T> {
 
-    public static Result SUCCESS = new Result();
+    public static Result SUCCESS = new Result(0, "操作成功");
 
     private String msg;
 
