@@ -10,7 +10,7 @@ import org.hibernate.type.StringType;
  * </p>
  *
  * @author qiuyuan
- * @since 1.0
+ * @since 1.1
  */
 public class GateonMySQLlDialect extends MySQL5Dialect {
 

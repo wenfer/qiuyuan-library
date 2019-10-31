@@ -15,5 +15,4 @@ public class DefaultQuery<T> extends BaseQuery<T, T> {
         super(entityManager, resultClass, resultClass);
     }
 
-
 }
