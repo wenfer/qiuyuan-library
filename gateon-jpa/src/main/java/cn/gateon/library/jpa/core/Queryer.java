@@ -27,6 +27,14 @@ public interface Queryer<R> {
 
     long count();
 
+    Queryer<R> orderBy(String property, boolean asc);
+
+    /**
+     * 带字符集转换排序，需要使用convert关键字，
+     * 必须使用 {@link cn.gateon.library.jpa.core.jpa.GateonMySQLlDialect} 方言
+     */
+    Queryer<R> orderBy(String property, boolean asc, String convertCharset);
+
     R findOne();
 
     List<R> findAll();

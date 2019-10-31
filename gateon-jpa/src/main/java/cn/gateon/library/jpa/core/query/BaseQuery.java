@@ -4,6 +4,7 @@ import cn.gateon.library.common.data.Page;
 import cn.gateon.library.common.data.PageRequest;
 import cn.gateon.library.jpa.core.Queryer;
 import cn.gateon.library.jpa.core.SubQueryer;
+import cn.gateon.library.jpa.core.jpa.ConvertFunction;
 import cn.gateon.library.jpa.specification.Where;
 import cn.gateon.library.jpa.specification.impl.WhereImpl;
 import org.hibernate.query.criteria.internal.OrderImpl;
@@ -37,6 +38,8 @@ public class BaseQuery<F, R> implements Queryer<R> {
 
     CriteriaQuery<R> query;
 
+    private List<Order> orders = new ArrayList<>();
+
     private List<Predicate> predicates = new ArrayList<>();
 
     BaseQuery(EntityManager entityManager, Class<F> from, Class<R> result) {
@@ -48,10 +51,13 @@ public class BaseQuery<F, R> implements Queryer<R> {
         this.where = new WhereImpl<>(cb, root, predicates);
     }
 
-    private TypedQuery<R> query() {
+    private TypedQuery<R> createQuery() {
         Predicate[] predicateArray = new Predicate[this.predicates.size()];
         Predicate[] predicates = this.predicates.toArray(predicateArray);
         query.where(predicates);
+        if (CollectionUtils.isEmpty(orders)) {
+            query.orderBy(orders);
+        }
         return entityManager.createQuery(query);
     }
 
@@ -67,21 +73,21 @@ public class BaseQuery<F, R> implements Queryer<R> {
 
     @Override
     public Where join(String property) {
-        Join<R,?> join = root.join(property);
+        Join<R, ?> join = root.join(property);
         return new WhereImpl<>(cb, join, predicates);
     }
-
 
 
     @Override
     public Page<R> page(PageRequest pageRequest) {
         String sort = pageRequest.getSort();
-        if(StringUtils.isEmpty(sort)){
-            query.orderBy(new OrderImpl(root.get(sort),pageRequest.getAsc()));
+        if (StringUtils.isEmpty(sort)) {
+            orders.add(new OrderImpl(root.get(sort), pageRequest.getAsc()));
         }
-        query().setMaxResults(pageRequest.getSize());
-        query().setFirstResult(pageRequest.getPage() * pageRequest.getSize());
-        List<R> resultList = query().getResultList();
+        TypedQuery<R> typedQuery = createQuery();
+        typedQuery.setMaxResults(pageRequest.getSize());
+        typedQuery.setFirstResult(pageRequest.getPage() * pageRequest.getSize());
+        List<R> resultList = typedQuery.getResultList();
         return new Page<>(resultList, pageRequest, count());
     }
 
@@ -95,13 +101,26 @@ public class BaseQuery<F, R> implements Queryer<R> {
     }
 
     @Override
+    public Queryer<R> orderBy(String property, boolean asc) {
+        orders.add(new OrderImpl(root.get(property), asc));
+        return this;
+    }
+
+    @Override
+    public Queryer<R> orderBy(String property, boolean asc, String convertCharset) {
+        ConvertFunction convertFunction = new ConvertFunction(cb, root.get(property).as(String.class), convertCharset);
+        orders.add(new OrderImpl(convertFunction, asc));
+        return this;
+    }
+
+    @Override
     public R findOne() {
-        return query().getSingleResult();
+        return createQuery().getSingleResult();
     }
 
     @Override
     public List<R> findAll() {
-        return query().getResultList();
+        return createQuery().getResultList();
     }
 
     @Override
