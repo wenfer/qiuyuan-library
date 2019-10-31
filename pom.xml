@@ -13,7 +13,7 @@
         <module>gateon-common</module>
     </modules>
     <properties>
-        <mbg-version>1.1-RELEASE</mbg-version>
+        <mbg-version>1.1.1-RELEASE</mbg-version>
     </properties>
 
     <parent>
@@ -34,12 +34,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>cn.gateon.libray</groupId>
+                <groupId>cn.gateon.library</groupId>
                 <artifactId>gateon-common</artifactId>
                 <version>${mbg-version}</version>
             </dependency>
             <dependency>
-                <groupId>cn.gateon.libray</groupId>
+                <groupId>cn.gateon.library</groupId>
                 <artifactId>gateon-jpa</artifactId>
                 <version>${mbg-version}</version>
             </dependency>

@@ -15,7 +15,7 @@
         <dependency>
             <groupId>cn.gateon.library</groupId>
             <artifactId>gateon-common</artifactId>
-            <version>1.0-RELEASE</version>
+            <version>${mbg-version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
