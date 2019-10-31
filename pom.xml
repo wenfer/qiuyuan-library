@@ -7,11 +7,14 @@
     <groupId>cn.gateon.library</groupId>
     <artifactId>gateon-library</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${mbg-version}</version>
     <modules>
         <module>gateon-jpa</module>
         <module>gateon-common</module>
     </modules>
+    <properties>
+        <mbg-version>1.1-RELEASE</mbg-version>
+    </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -30,6 +33,16 @@
     </dependencies>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>cn.gateon.libray</groupId>
+                <artifactId>gateon-common</artifactId>
+                <version>${mbg-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.gateon.libray</groupId>
+                <artifactId>gateon-jpa</artifactId>
+                <version>${mbg-version}</version>
+            </dependency>
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
