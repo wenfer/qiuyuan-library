@@ -16,5 +16,6 @@ public class GateonMySQLlDialect extends MySQL5Dialect {
 
     public GateonMySQLlDialect() {
         super.registerFunction("convert", new SQLFunctionTemplate(StringType.INSTANCE, "CONVERT(?1 USING ?2)"));
+        super.registerFunction("find_in_set", new SQLFunctionTemplate(StringType.INSTANCE, "find_in_set(?1 USING ?2)"));
     }
 }

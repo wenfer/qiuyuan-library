@@ -1,6 +1,8 @@
 package cn.gateon.library.jpa.specification.impl;
 
+import cn.gateon.library.jpa.core.jpa.FindInSetFunction;
 import cn.gateon.library.jpa.specification.Where;
+import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -21,13 +23,13 @@ public class WhereImpl<F, R> implements Where {
 
     private final List<Predicate> predicates;
 
-    private final CriteriaBuilder cb;
+    private final CriteriaBuilderImpl cb;
 
     private final From<F, R> root;
 
     public WhereImpl(CriteriaBuilder cb, From<F, R> root, List<Predicate> predicates) {
         this.predicates = predicates;
-        this.cb = cb;
+        this.cb = (CriteriaBuilderImpl) cb;
         this.root = root;
     }
 
@@ -82,6 +84,14 @@ public class WhereImpl<F, R> implements Where {
             return this;
         }
         predicates.add(cb.gt(root.get(property), value));
+        return this;
+    }
+
+    @Override
+    public Where findInSet(String property, Object value) {
+        FindInSetFunction findInSetFunction = new FindInSetFunction(cb, root.get(property), value);
+        predicates.add(findInSetFunction);
+        // predicates.add(cb.function())
         return this;
     }
 
