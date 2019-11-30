@@ -91,7 +91,6 @@ public class WhereImpl<F, R> implements Where {
     public Where findInSet(String property, Object value) {
         FindInSetFunction findInSetFunction = new FindInSetFunction(cb, root.get(property), value);
         predicates.add(findInSetFunction);
-        // predicates.add(cb.function())
         return this;
     }
 

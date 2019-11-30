@@ -2,16 +2,12 @@ package cn.gateon.library.jpa.core.jpa;
 
 import lombok.Getter;
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
-import org.hibernate.query.criteria.internal.ParameterContainer;
 import org.hibernate.query.criteria.internal.ParameterRegistry;
 import org.hibernate.query.criteria.internal.compile.RenderingContext;
 import org.hibernate.query.criteria.internal.expression.ExpressionImpl;
 import org.hibernate.query.criteria.internal.expression.function.BasicFunctionExpression;
-import org.hibernate.query.criteria.internal.predicate.AbstractSimplePredicate;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
-import java.io.Serializable;
 
 /**
  * <p>
@@ -22,16 +18,16 @@ import java.io.Serializable;
  * @since 1.1
  */
 @Getter
-public class FindInSetFunction extends AbstractSimplePredicate implements Serializable {
+public class FindInSetFunction extends BasicFunctionExpression<Boolean> {
 
     private static String NAME = "find_in_set";
 
     public ExpressionImpl<String> property;
 
-    private Object value;
+    private String value;
 
-    public FindInSetFunction(CriteriaBuilderImpl criteriaBuilder,Expression<String> property,Object value) {
-        super(criteriaBuilder);
+    public FindInSetFunction(CriteriaBuilderImpl criteriaBuilder, Expression<String> property, String value) {
+        super(criteriaBuilder, Boolean.class, NAME);
         this.property = (ExpressionImpl<String>) property;
         this.value = value;
     }
@@ -39,13 +35,11 @@ public class FindInSetFunction extends AbstractSimplePredicate implements Serial
 
     @Override
     public void registerParameters(ParameterRegistry registry) {
-        ParameterContainer.Helper.possibleParameter(getProperty(), registry);
+        Helper.possibleParameter(getProperty(), registry);
     }
 
     @Override
-    public String render(boolean isNegated, RenderingContext renderingContext) {
-        return NAME + "(" +
-                value.toString() +
-                " ,  '" + getProperty().render(renderingContext) + "' )";
+    public String render(RenderingContext renderingContext) {
+        return NAME + "('" + value + "'," + getProperty().render(renderingContext) + ")";
     }
 }
