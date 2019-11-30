@@ -7,14 +7,14 @@
     <groupId>cn.gateon.library</groupId>
     <artifactId>gateon-library</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${mbg-version}</version>
     <modules>
         <module>gateon-jpa</module>
         <module>gateon-common</module>
         <module>gateon-library-dependencies</module>
     </modules>
     <properties>
-        <mbg-version>1.0-SNAPSHOT</mbg-version>
+        <mbg-version>1.1.3-RELEASE</mbg-version>
     </properties>
 
     <parent>
