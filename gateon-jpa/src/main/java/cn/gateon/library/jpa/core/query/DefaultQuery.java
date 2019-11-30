@@ -1,5 +1,7 @@
 package cn.gateon.library.jpa.core.query;
 
+import cn.gateon.library.jpa.core.CollectionQueryer;
+
 import javax.persistence.EntityManager;
 
 /**
@@ -14,5 +16,6 @@ public class DefaultQuery<T> extends BaseQuery<T, T> {
     public DefaultQuery(EntityManager entityManager, Class<T> resultClass) {
         super(entityManager, resultClass, resultClass);
     }
+
 
 }
