@@ -88,9 +88,8 @@ public class WhereImpl<F, R> implements Where {
     }
 
     @Override
-    public Where findInSet(String property, Object value) {
-        FindInSetFunction findInSetFunction = new FindInSetFunction(cb, root.get(property), value);
-        predicates.add(findInSetFunction);
+    public Where findInSet(String property, String value) {
+        predicates.add(cb.isTrue(new FindInSetFunction(cb, root.get(property), value)));
         return this;
     }
 

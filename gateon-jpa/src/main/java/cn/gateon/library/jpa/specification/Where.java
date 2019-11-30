@@ -23,7 +23,7 @@ public interface Where<F> {
 
     Where<F> gt(String property, Number value);
 
-    Where<F> findInSet(String property, Object value);
+    Where<F> findInSet(String property, String value);
 
     Where<F> lte(String property, Number value);
 
