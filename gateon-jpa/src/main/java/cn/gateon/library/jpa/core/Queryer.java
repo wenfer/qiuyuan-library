@@ -23,6 +23,13 @@ public interface Queryer<R> {
 
     Where join(String property);
 
+    /**
+     * 单属性集合查询
+     *
+     * @since 1.1.4
+     */
+    <Z> CollectionQueryer<Z> joinCollection(String property);
+
     Queryer<R> orderBy(String property, boolean asc);
 
     /**

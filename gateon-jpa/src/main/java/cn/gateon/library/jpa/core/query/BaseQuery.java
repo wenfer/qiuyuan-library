@@ -2,6 +2,7 @@ package cn.gateon.library.jpa.core.query;
 
 import cn.gateon.library.common.data.Page;
 import cn.gateon.library.common.data.PageRequest;
+import cn.gateon.library.jpa.core.CollectionQueryer;
 import cn.gateon.library.jpa.core.Queryer;
 import cn.gateon.library.jpa.core.SubQueryer;
 import cn.gateon.library.jpa.core.jpa.ConvertFunction;
@@ -77,6 +78,12 @@ public class BaseQuery<F, R> implements Queryer<R> {
         return new WhereImpl<>(cb, join, predicates);
     }
 
+    @Override
+    public <Z> CollectionQueryer<Z> joinCollection(String property) {
+        CollectionJoin<F, Z> objectObjectCollectionJoin = root.joinCollection(property);
+
+        return new CollectionQuery<>(objectObjectCollectionJoin,cb);
+    }
 
     @Override
     public Page<R> page(PageRequest pageRequest) {
