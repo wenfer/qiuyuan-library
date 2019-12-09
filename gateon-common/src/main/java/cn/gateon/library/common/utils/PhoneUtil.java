@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public class PhoneUtil {
 
-    private static final String PATTERN = "(\\d{3})\\d{4}(\\d{4})";
+    public static final String PATTERN = "(\\d{3})\\d{4}(\\d{4})";
 
     private static final String REPLACE = "(\\d{3})\\d{4}(\\d{4})";
 
