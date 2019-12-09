@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author qiuyuan
@@ -21,5 +22,9 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
     Queryer<T> queryer();
 
     <R> Queryer<R> multiSum(Class<R> clazz);
+
+    <R> R query(String sql,Class<R> r);
+
+    <R> List<R> queryList(String sql, Class<R> r);
 
 }
