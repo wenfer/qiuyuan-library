@@ -30,7 +30,7 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
 
     Class<R> result;
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     CriteriaBuilder cb;
 
@@ -114,8 +114,9 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
     @Override
     public long count() {
         CriteriaQuery<Long> count = cb.createQuery(Long.class);
-        build(count);
+        count.select(cb.count(root)).distinct(true);
         join(count);
+        build(count);
         TypedQuery<Long> countQuery = entityManager.createQuery(count);
         return countQuery.getSingleResult();
     }
