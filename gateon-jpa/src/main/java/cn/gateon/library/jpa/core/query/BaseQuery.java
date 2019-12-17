@@ -34,7 +34,7 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
 
     CriteriaBuilder cb;
 
-    Root<F> root;
+    final Root<F> root;
 
     CriteriaQuery<R> query;
 

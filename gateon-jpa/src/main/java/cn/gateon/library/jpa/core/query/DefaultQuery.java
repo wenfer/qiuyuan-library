@@ -1,7 +1,5 @@
 package cn.gateon.library.jpa.core.query;
 
-import cn.gateon.library.jpa.core.CollectionQueryer;
-
 import javax.persistence.EntityManager;
 
 /**
