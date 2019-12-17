@@ -60,7 +60,7 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
 
     private TypedQuery<R> createQuery() {
         beforeQuery();
-        if (CollectionUtils.isEmpty(having)) {
+        if (!CollectionUtils.isEmpty(having)) {
             Predicate[] predicateArray = new Predicate[this.having.size()];
             query.having(this.having.toArray(predicateArray));
         }
