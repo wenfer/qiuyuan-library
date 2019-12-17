@@ -25,6 +25,4 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
 
     <R> R query(String sql,Class<R> r);
 
-    <R> List<R> queryList(String sql, Class<R> r);
-
 }

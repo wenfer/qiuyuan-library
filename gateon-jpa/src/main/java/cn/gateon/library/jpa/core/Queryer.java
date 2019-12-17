@@ -2,6 +2,7 @@ package cn.gateon.library.jpa.core;
 
 import cn.gateon.library.common.data.Page;
 import cn.gateon.library.common.data.PageRequest;
+import cn.gateon.library.jpa.specification.Having;
 import cn.gateon.library.jpa.specification.Where;
 
 import java.util.List;
@@ -17,9 +18,13 @@ import java.util.List;
  */
 public interface Queryer<R> {
 
-    void setWhere(Where where);
-
     Where where();
+
+    /**
+     * @since 1.2
+     * @return having 构造器
+     */
+    Having having();
 
     Where join(String property);
 

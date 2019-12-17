@@ -6,6 +6,7 @@ import cn.gateon.library.jpa.core.CollectionQueryer;
 import cn.gateon.library.jpa.core.Queryer;
 import cn.gateon.library.jpa.core.SubQueryer;
 import cn.gateon.library.jpa.core.jpa.ConvertFunction;
+import cn.gateon.library.jpa.specification.Having;
 import cn.gateon.library.jpa.specification.Where;
 import cn.gateon.library.jpa.specification.impl.WhereImpl;
 import org.hibernate.query.criteria.internal.OrderImpl;
@@ -25,64 +26,76 @@ import java.util.List;
  * @author qiuyuan
  * @since 1.0
  */
-public class BaseQuery<F, R> implements Queryer<R> {
+public abstract class BaseQuery<F, R> implements Queryer<R> {
 
     Class<R> result;
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     CriteriaBuilder cb;
 
-    private Where where;
-
-    Root<F> root;
+    final Root<F> root;
 
     CriteriaQuery<R> query;
 
     private List<Order> orders = new ArrayList<>();
 
-    private List<Predicate> predicates = new ArrayList<>();
+    private List<Predicate> where = new ArrayList<>();
+
+    private List<Predicate> having;
 
     BaseQuery(EntityManager entityManager, Class<F> from, Class<R> result) {
         this.entityManager = entityManager;
         this.result = result;
         this.cb = entityManager.getCriteriaBuilder();
         this.query = cb.createQuery(result);
-        Root<F> root = this.query.from(from);
-        this.where = new WhereImpl<>(cb, root, predicates);
+        this.root = this.query.from(from);
+    }
+
+    /**
+     * 如需要额外构造或自定义构造，覆写此方法
+     */
+    protected void beforeQuery() {
     }
 
     private TypedQuery<R> createQuery() {
-        Predicate[] predicateArray = new Predicate[this.predicates.size()];
-        Predicate[] predicates = this.predicates.toArray(predicateArray);
-        query.where(predicates);
+        beforeQuery();
+        if (having != null) {
+            Predicate[] predicateArray = new Predicate[this.having.size()];
+            query.having(this.having.toArray(predicateArray));
+        }
+        if (where != null) {
+            Predicate[] predicateArray = new Predicate[this.where.size()];
+            query.where(this.where.toArray(predicateArray));
+        }
         if (CollectionUtils.isEmpty(orders)) {
             query.orderBy(orders);
         }
         return entityManager.createQuery(query);
     }
 
-    @Override
-    public void setWhere(Where where) {
-        this.where = where;
-    }
 
     @Override
     public Where where() {
-        return where;
+        return new WhereImpl<>(cb, root, where);
+    }
+
+    @Override
+    public Having having() {
+        this.having = new ArrayList<>();
+        return new WhereImpl<>(cb, root, having);
     }
 
     @Override
     public Where join(String property) {
         Join<R, ?> join = root.join(property);
-        return new WhereImpl<>(cb, join, predicates);
+        return new WhereImpl<>(cb, join, where);
     }
 
     @Override
     public <Z> CollectionQueryer<Z> joinCollection(String property) {
         CollectionJoin<F, Z> objectObjectCollectionJoin = root.joinCollection(property);
-
-        return new CollectionQuery<>(objectObjectCollectionJoin,cb);
+        return new CollectionQuery<>(objectObjectCollectionJoin, cb);
     }
 
     @Override
@@ -101,8 +114,9 @@ public class BaseQuery<F, R> implements Queryer<R> {
     @Override
     public long count() {
         CriteriaQuery<Long> count = cb.createQuery(Long.class);
-        build(count);
+        count.select(cb.count(root)).distinct(true);
         join(count);
+        build(count);
         TypedQuery<Long> countQuery = entityManager.createQuery(count);
         return countQuery.getSingleResult();
     }
@@ -134,7 +148,7 @@ public class BaseQuery<F, R> implements Queryer<R> {
     public <SF, SR> SubQueryer<SR> subQuery(String property, Class<SF> from, Class<SR> result) {
         Subquery<SR> subquery = query.subquery(result);
         Root<SF> sfRoot = subquery.from(from);
-        return new DefaultSubQuery<>(new WhereImpl<>(cb, sfRoot, predicates), subquery);
+        return new DefaultSubQuery<>(new WhereImpl<>(cb, sfRoot, where), subquery);
     }
 
 
@@ -148,8 +162,8 @@ public class BaseQuery<F, R> implements Queryer<R> {
     }
 
     private AbstractQuery build(AbstractQuery query) {
-        Predicate[] predicateArray = new Predicate[this.predicates.size()];
-        Predicate[] predicates = this.predicates.toArray(predicateArray);
+        Predicate[] predicateArray = new Predicate[this.where.size()];
+        Predicate[] predicates = this.where.toArray(predicateArray);
         query.where(predicates);
         return query;
     }

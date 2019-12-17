@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.List;
 
@@ -40,11 +41,5 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
     public <R> R query(String sql, Class<R> r) {
         return entityManager.createQuery(sql, r).getSingleResult();
     }
-
-    @Override
-    public <R> List<R> queryList(String sql, Class<R> r) {
-        return entityManager.createQuery(sql, r).getResultList();
-    }
-
 
 }
