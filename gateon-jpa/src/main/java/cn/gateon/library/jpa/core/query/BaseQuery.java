@@ -60,15 +60,15 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
 
     private TypedQuery<R> createQuery() {
         beforeQuery();
-        if (having != null) {
+        if (CollectionUtils.isEmpty(having)) {
             Predicate[] predicateArray = new Predicate[this.having.size()];
             query.having(this.having.toArray(predicateArray));
         }
-        if (where != null) {
+        if (!CollectionUtils.isEmpty(where)) {
             Predicate[] predicateArray = new Predicate[this.where.size()];
             query.where(this.where.toArray(predicateArray));
         }
-        if (CollectionUtils.isEmpty(orders)) {
+        if (!CollectionUtils.isEmpty(orders)) {
             query.orderBy(orders);
         }
         return entityManager.createQuery(query);
