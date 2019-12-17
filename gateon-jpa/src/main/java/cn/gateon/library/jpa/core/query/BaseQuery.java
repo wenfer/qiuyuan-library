@@ -101,7 +101,7 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
     @Override
     public Page<R> page(PageRequest pageRequest) {
         String sort = pageRequest.getSort();
-        if (StringUtils.isEmpty(sort)) {
+        if (!StringUtils.isEmpty(sort)) {
             orders.add(new OrderImpl(root.get(sort), pageRequest.getAsc()));
         }
         TypedQuery<R> typedQuery = createQuery();
