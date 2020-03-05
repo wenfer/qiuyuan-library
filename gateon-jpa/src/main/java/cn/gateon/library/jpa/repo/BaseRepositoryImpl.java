@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author qiuyuan
@@ -28,12 +26,12 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
     }
 
     @Override
-    public Queryer<T> queryer() {
+    public Queryer<T, T> queryer() {
         return new DefaultQuery<>(entityManager, entityInformation.getJavaType());
     }
 
     @Override
-    public <R> Queryer<R> multiSum(Class<R> clazz) {
+    public <R> Queryer<T, R> multiSum(Class<R> clazz) {
         return new MultiSumQuery<>(entityManager, entityInformation.getJavaType(), clazz);
     }
 

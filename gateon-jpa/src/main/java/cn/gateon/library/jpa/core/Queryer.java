@@ -3,6 +3,7 @@ package cn.gateon.library.jpa.core;
 import cn.gateon.library.common.data.Page;
 import cn.gateon.library.common.data.PageRequest;
 import cn.gateon.library.jpa.specification.Having;
+import cn.gateon.library.jpa.specification.Or;
 import cn.gateon.library.jpa.specification.Where;
 
 import java.util.List;
@@ -16,17 +17,23 @@ import java.util.List;
  * @author qiuyuan
  * @since 1.0
  */
-public interface Queryer<R> {
-
-    Where where();
+public interface Queryer<F,R> {
 
     /**
      * @since 1.2
-     * @return having 构造器
+     * or查询构造器
      */
-    Having having();
+    Or<F> or();
 
-    Where join(String property);
+    Where<F> where();
+
+    /**
+     * @return having 构造器
+     * @since 1.2
+     */
+    Having<F> having();
+
+    Where<F> join(String property);
 
     /**
      * 单属性集合查询
@@ -35,13 +42,13 @@ public interface Queryer<R> {
      */
     <Z> CollectionQueryer<Z> joinCollection(String property);
 
-    Queryer<R> orderBy(String property, boolean asc);
+    Queryer<F,R> orderBy(String property, boolean asc);
 
     /**
      * 带字符集转换排序，需要使用convert关键字，
      * 必须使用 {@link cn.gateon.library.jpa.core.jpa.GateonMySQLlDialect} 方言
      */
-    Queryer<R> orderBy(String property, boolean asc, String convertCharset);
+    Queryer<F,R> orderBy(String property, boolean asc, String convertCharset);
 
     R findOne();
 

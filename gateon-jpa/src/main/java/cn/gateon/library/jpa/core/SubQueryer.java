@@ -17,7 +17,7 @@ public interface SubQueryer<R> {
     /**
      * 获取条件构造器
      */
-    Where where();
+    Where<R> where();
 
     /**
      * 获取拼接出的子查询
