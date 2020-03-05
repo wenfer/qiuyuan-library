@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -144,7 +145,11 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
 
     @Override
     public R findOne() {
-        return createQuery().getSingleResult();
+        try {
+            return createQuery().getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override
