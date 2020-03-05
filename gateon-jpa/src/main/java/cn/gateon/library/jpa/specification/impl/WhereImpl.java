@@ -20,9 +20,9 @@ import java.util.List;
  * @author qiuyuan
  * @since 1.0
  */
-public class WhereImpl<F, R> implements Where, Having {
+public class WhereImpl<F, R> implements Where<F>, Having<F> {
 
-    private final List<Predicate> predicates;
+    protected final List<Predicate> predicates;
 
     private final CriteriaBuilderImpl cb;
 
@@ -35,7 +35,7 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where eq(String property, Object value) {
+    public Where<F> eq(String property, Object value) {
         if (value == null) {
             return this;
         }
@@ -44,7 +44,7 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where neq(String property, Object value) {
+    public Where<F> neq(String property, Object value) {
         if (value == null) {
             return this;
         }
@@ -53,7 +53,7 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where in(String property, Object... value) {
+    public Where<F> in(String property, Object... value) {
         if (value == null) {
             return this;
         }
@@ -62,7 +62,7 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where nin(String property, Object... value) {
+    public Where<F> nin(String property, Object... value) {
         if (value == null) {
             return this;
         }
@@ -71,7 +71,7 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where gte(String property, Number value) {
+    public Where<F> gte(String property, Number value) {
         if (value == null) {
             return this;
         }
@@ -80,7 +80,7 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where gt(String property, Number value) {
+    public Where<F> gt(String property, Number value) {
         if (value == null) {
             return this;
         }
@@ -89,13 +89,13 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where findInSet(String property, String value) {
+    public Where<F> findInSet(String property, String value) {
         predicates.add(cb.isTrue(new FindInSetFunction(cb, root.get(property), value)));
         return this;
     }
 
     @Override
-    public Where lte(String property, Number value) {
+    public Where<F> lte(String property, Number value) {
         if (value == null) {
             return this;
         }
@@ -113,7 +113,7 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where start(String property, Date start) {
+    public Where<F> start(String property, Date start) {
         if (start == null) {
             return this;
         }
@@ -122,7 +122,7 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where end(String property, Date end) {
+    public Where<F> end(String property, Date end) {
         if (end == null) {
             return this;
         }
@@ -131,13 +131,13 @@ public class WhereImpl<F, R> implements Where, Having {
     }
 
     @Override
-    public Where isNull(String property, boolean isNull) {
+    public Where<F> isNull(String property, boolean isNull) {
         predicates.add(isNull ? cb.isNull(root.get(property)) : cb.isNotNull(root.get(property)));
         return this;
     }
 
     @Override
-    public Where like(String property, String value, int position) {
+    public Where<F> like(String property, String value, int position) {
         if (StringUtils.isEmpty(value)) {
             return this;
         }

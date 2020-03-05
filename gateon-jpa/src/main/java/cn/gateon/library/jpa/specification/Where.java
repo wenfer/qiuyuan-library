@@ -1,7 +1,5 @@
 package cn.gateon.library.jpa.specification;
 
-import java.util.Date;
-
 /**
  * <p>
  * 条件构造器
@@ -12,7 +10,6 @@ import java.util.Date;
  * @since 1.0
  */
 public interface Where<F> extends PredicateBuilder<F> {
-
 
 
 }

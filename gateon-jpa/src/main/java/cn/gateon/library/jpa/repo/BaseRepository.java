@@ -19,9 +19,9 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
      *
      * @return 创建一个新的查询器
      */
-    Queryer<T> queryer();
+    Queryer<T,T> queryer();
 
-    <R> Queryer<R> multiSum(Class<R> clazz);
+    <R> Queryer<T,R> multiSum(Class<R> clazz);
 
     <R> R query(String sql,Class<R> r);
 

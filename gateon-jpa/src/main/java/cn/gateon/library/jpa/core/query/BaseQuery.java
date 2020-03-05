@@ -7,7 +7,9 @@ import cn.gateon.library.jpa.core.Queryer;
 import cn.gateon.library.jpa.core.SubQueryer;
 import cn.gateon.library.jpa.core.jpa.ConvertFunction;
 import cn.gateon.library.jpa.specification.Having;
+import cn.gateon.library.jpa.specification.Or;
 import cn.gateon.library.jpa.specification.Where;
+import cn.gateon.library.jpa.specification.impl.OrWhereImpl;
 import cn.gateon.library.jpa.specification.impl.WhereImpl;
 import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.util.CollectionUtils;
@@ -26,7 +28,7 @@ import java.util.List;
  * @author qiuyuan
  * @since 1.0
  */
-public abstract class BaseQuery<F, R> implements Queryer<R> {
+public abstract class BaseQuery<F, R> implements Queryer<F, R> {
 
     Class<R> result;
 
@@ -76,19 +78,25 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
 
 
     @Override
-    public Where where() {
+    public Where<F> where() {
         return new WhereImpl<>(cb, root, where);
     }
 
     @Override
-    public Having having() {
+    public Or<F> or() {
+        return new OrWhereImpl<>(cb, root, where);
+    }
+
+
+    @Override
+    public Having<F> having() {
         this.having = new ArrayList<>();
         return new WhereImpl<>(cb, root, having);
     }
 
     @Override
-    public Where join(String property) {
-        Join<R, ?> join = root.join(property);
+    public Where<F> join(String property) {
+        Join<F, R> join = root.join(property);
         return new WhereImpl<>(cb, join, where);
     }
 
@@ -122,13 +130,13 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
     }
 
     @Override
-    public Queryer<R> orderBy(String property, boolean asc) {
+    public Queryer<F,R> orderBy(String property, boolean asc) {
         orders.add(new OrderImpl(root.get(property), asc));
         return this;
     }
 
     @Override
-    public Queryer<R> orderBy(String property, boolean asc, String convertCharset) {
+    public Queryer<F,R> orderBy(String property, boolean asc, String convertCharset) {
         ConvertFunction convertFunction = new ConvertFunction(cb, root.get(property).as(String.class), convertCharset);
         orders.add(new OrderImpl(convertFunction, asc));
         return this;
@@ -152,8 +160,8 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
     }
 
 
-    private void join(CriteriaQuery criteriaQuery) {
-        Root from = criteriaQuery.from(root.getJavaType());
+    private void join(CriteriaQuery<?> criteriaQuery) {
+        Root<?> from = criteriaQuery.from(root.getJavaType());
         if (!CollectionUtils.isEmpty(root.getJoins())) {
             for (Join<F, ?> join : root.getJoins()) {
                 from.join(join.getAttribute().getName(), join.getJoinType());
@@ -161,7 +169,7 @@ public abstract class BaseQuery<F, R> implements Queryer<R> {
         }
     }
 
-    private AbstractQuery build(AbstractQuery query) {
+    private AbstractQuery<?> build(AbstractQuery<?> query) {
         Predicate[] predicateArray = new Predicate[this.where.size()];
         Predicate[] predicates = this.where.toArray(predicateArray);
         query.where(predicates);
