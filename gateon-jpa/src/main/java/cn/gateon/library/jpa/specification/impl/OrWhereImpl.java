@@ -20,11 +20,11 @@ public class OrWhereImpl<F, R> extends WhereImpl<F, R> implements Or<F> {
 
     private final CriteriaBuilderImpl cb;
 
-    protected final List<Predicate> predicates;
+    protected final List<Predicate> oriPredicates;
 
     public OrWhereImpl(CriteriaBuilder cb, From<F, R> root, List<Predicate> predicates) {
         super(cb, root, new ArrayList<>());
-        this.predicates = predicates;
+        this.oriPredicates = predicates;
         this.cb = (CriteriaBuilderImpl) cb;
     }
 
@@ -33,6 +33,6 @@ public class OrWhereImpl<F, R> extends WhereImpl<F, R> implements Or<F> {
     public void build() {
         List<Predicate> predicates = super.predicates;
         Predicate[] pd = new Predicate[predicates.size()];
-        predicates.add(cb.or(predicates.toArray(pd)));
+        oriPredicates.add(cb.or(predicates.toArray(pd)));
     }
 }
