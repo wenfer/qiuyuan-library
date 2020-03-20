@@ -18,7 +18,7 @@ import javax.persistence.criteria.Expression;
  * @since 1.1
  */
 @Getter
-public class FindInSetFunction extends BasicFunctionExpression<Boolean> {
+public class FindInSetFunction extends BasicFunctionExpression<Integer> {
 
     private static String NAME = "find_in_set";
 
@@ -27,7 +27,7 @@ public class FindInSetFunction extends BasicFunctionExpression<Boolean> {
     private String value;
 
     public FindInSetFunction(CriteriaBuilderImpl criteriaBuilder, Expression<String> property, String value) {
-        super(criteriaBuilder, Boolean.class, NAME);
+        super(criteriaBuilder, Integer.class, NAME);
         this.property = (ExpressionImpl<String>) property;
         this.value = value;
     }

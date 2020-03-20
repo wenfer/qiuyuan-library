@@ -90,7 +90,7 @@ public class WhereImpl<F, R> implements Where<F>, Having<F> {
 
     @Override
     public Where<F> findInSet(String property, String value) {
-        predicates.add(cb.isTrue(new FindInSetFunction(cb, root.get(property), value)));
+        predicates.add(cb.ge(new FindInSetFunction(cb, root.get(property), value), 1));
         return this;
     }
 
