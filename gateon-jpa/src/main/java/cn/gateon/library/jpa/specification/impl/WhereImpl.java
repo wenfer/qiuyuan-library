@@ -57,7 +57,7 @@ public class WhereImpl<F, R> implements Where<F>, Having<F> {
         if (value == null) {
             return this;
         }
-        predicates.add(cb.in(root.get(property)).in(value));
+        predicates.add(root.get(property).in(value));
         return this;
     }
 
