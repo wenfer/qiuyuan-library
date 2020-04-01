@@ -63,7 +63,7 @@ public class Page<T> implements Serializable {
         this.pageSize = size;
         this.total = total;
         this.pages = size == 0 ? 1 : (long) Math.ceil((double) total / size);
-        this.hasNext = this.pages > (this.currentPage+1);
+        this.hasNext = this.pages > (this.currentPage);
         this.hasPrevious = this.currentPage > 1;
     }
 
