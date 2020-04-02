@@ -5,7 +5,7 @@
     <parent>
         <artifactId>gateon-library</artifactId>
         <groupId>cn.gateon.library</groupId>
-        <version>1.2.4-RELEASE</version>
+        <version>1.2.5-RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
@@ -16,7 +16,7 @@
             <dependency>
                 <groupId>cn.gateon.library</groupId>
                 <artifactId>gateon-common</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>mysql</groupId>
@@ -26,7 +26,7 @@
             <dependency>
                 <groupId>cn.gateon.library</groupId>
                 <artifactId>gateon-jpa</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
