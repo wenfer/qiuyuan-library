@@ -9,10 +9,10 @@ import javax.persistence.EntityManager;
  * @author qiuyuan
  * @since 1.0
  */
-public class DefaultQuery<T> extends BaseQuery<T, T> {
+public class DefaultQuery<F,R> extends BaseQuery<F, R> {
 
-    public DefaultQuery(EntityManager entityManager, Class<T> resultClass) {
-        super(entityManager, resultClass, resultClass);
+    public DefaultQuery(EntityManager entityManager,Class<F> fromClass, Class<R> resultClass) {
+        super(entityManager, fromClass, resultClass);
     }
 
 

@@ -21,6 +21,8 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
      */
     Queryer<T,T> queryer();
 
+    <R> Queryer<T,R> queryer(Class<R> resultClass);
+
     <R> Queryer<T,R> multiSum(Class<R> clazz);
 
     <R> R query(String sql,Class<R> r);
