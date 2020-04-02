@@ -27,7 +27,12 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
 
     @Override
     public Queryer<T, T> queryer() {
-        return new DefaultQuery<>(entityManager, entityInformation.getJavaType());
+        return new DefaultQuery<>(entityManager, entityInformation.getJavaType(), entityInformation.getJavaType());
+    }
+
+    @Override
+    public <S> Queryer<T, S> queryer(Class<S> resultClass) {
+        return new DefaultQuery<>(entityManager, entityInformation.getJavaType(), resultClass);
     }
 
     @Override
