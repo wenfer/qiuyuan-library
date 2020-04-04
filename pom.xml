@@ -12,9 +12,13 @@
         <module>gateon-jpa</module>
         <module>gateon-common</module>
         <module>gateon-library-dependencies</module>
+        <module>gateon-redis</module>
+        <module>gateon-feign</module>
+        <module>gateon-mvc</module>
     </modules>
     <properties>
         <mbg-version>1.0-SNAPSHOT</mbg-version>
+        <hutool.version>5.2.5</hutool.version>
     </properties>
 
     <parent>
@@ -32,6 +36,23 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-spring-web</artifactId>
+                <version>2.9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 
     <distributionManagement>
         <repository>
