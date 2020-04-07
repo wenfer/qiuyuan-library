@@ -5,7 +5,7 @@
     <parent>
         <artifactId>gateon-library</artifactId>
         <groupId>cn.gateon.library</groupId>
-        <version>1.2.8.4-RELEASE</version>
+        <version>1.2.8.6-RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,6 +17,11 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.gateon.library</groupId>
+            <artifactId>gateon-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
