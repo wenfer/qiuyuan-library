@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 @EnableJpaRepositories(
-        value = {"**.repository.**", "**.model.**"},
+        value = {"**.repository.**", "**.model"},
         repositoryBaseClass = BaseRepositoryImpl.class)
 public @interface EnableJPA {
 }
