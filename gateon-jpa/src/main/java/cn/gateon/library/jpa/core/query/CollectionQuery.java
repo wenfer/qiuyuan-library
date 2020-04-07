@@ -4,6 +4,7 @@ import cn.gateon.library.jpa.core.CollectionQueryer;
 
 import javax.persistence.criteria.CollectionJoin;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 
 /**
@@ -19,7 +20,7 @@ public class CollectionQuery<C> implements CollectionQueryer<C> {
 
     private CriteriaBuilder criteriaBuilder;
 
-    public CollectionQuery(CollectionJoin<?, C> cCollectionJoin, CriteriaBuilder criteriaBuilder) {
+    public CollectionQuery(Join<?, C> cCollectionJoin, CriteriaBuilder criteriaBuilder) {
         this.root = cCollectionJoin;
         this.criteriaBuilder = criteriaBuilder;
 
