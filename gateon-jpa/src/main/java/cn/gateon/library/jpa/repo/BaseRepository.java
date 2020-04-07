@@ -1,11 +1,11 @@
 package cn.gateon.library.jpa.repo;
 
+import cn.gateon.library.jpa.core.CountQueryer;
 import cn.gateon.library.jpa.core.Queryer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author qiuyuan
@@ -19,12 +19,14 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
      *
      * @return 创建一个新的查询器
      */
-    Queryer<T,T> queryer();
+    Queryer<T, T> queryer();
 
-    <R> Queryer<T,R> queryer(Class<R> resultClass);
+    <R> Queryer<T, R> queryer(Class<R> resultClass);
 
-    <R> Queryer<T,R> multiSum(Class<R> clazz);
+    <R> Queryer<T, R> multiSum(Class<R> clazz);
 
-    <R> R query(String sql,Class<R> r);
+    CountQueryer<T> counter();
+
+    <R> R query(String sql, Class<R> r);
 
 }

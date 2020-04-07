@@ -33,11 +33,11 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
 
     Class<R> result;
 
-    private final EntityManager entityManager;
+    protected final EntityManager entityManager;
 
     CriteriaBuilder cb;
 
-    final Root<F> root;
+    Root<F> root;
 
     CriteriaQuery<R> query;
 
@@ -52,7 +52,14 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
         this.result = result;
         this.cb = entityManager.getCriteriaBuilder();
         this.query = cb.createQuery(result);
-        this.root = this.query.from(from);
+        this.root = query.from(from);
+    }
+
+    BaseQuery(EntityManager entityManager, Class<R> result) {
+        this.entityManager = entityManager;
+        this.result = result;
+        this.cb = entityManager.getCriteriaBuilder();
+        this.query = cb.createQuery(result);
     }
 
     /**
@@ -117,27 +124,31 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
         typedQuery.setMaxResults(pageRequest.getSize());
         typedQuery.setFirstResult(pageRequest.getPage() * pageRequest.getSize());
         List<R> resultList = typedQuery.getResultList();
-        return new Page<>(resultList, pageRequest, count());
-    }
-
-    @Override
-    public long count() {
         CriteriaQuery<Long> count = cb.createQuery(Long.class);
-        count.select(cb.count(root)).distinct(true);
-        join(count);
+        count.select(cb.count(root));
+        joinQuery(count);
         build(count);
         TypedQuery<Long> countQuery = entityManager.createQuery(count);
-        return countQuery.getSingleResult();
+        return new Page<>(resultList, pageRequest, countQuery.getSingleResult());
     }
 
+    /**
+     * 这里有个坑，就是在拼接predicates的时候  root 使用的是model本身  所以别名是提前构建好的
+     * 但是这里在createQuery的时候  会重新创建一个别名 导致之前的predicates 全部对应不上
+     * 所以如果是基于本身的查询 在进行count的时候不会有这个问题  但是直接createQuery的时候就会报错
+     *
+     * @return
+     */
+
+
     @Override
-    public Queryer<F,R> orderBy(String property, boolean asc) {
+    public Queryer<F, R> orderBy(String property, boolean asc) {
         orders.add(new OrderImpl(root.get(property), asc));
         return this;
     }
 
     @Override
-    public Queryer<F,R> orderBy(String property, boolean asc, String convertCharset) {
+    public Queryer<F, R> orderBy(String property, boolean asc, String convertCharset) {
         ConvertFunction convertFunction = new ConvertFunction(cb, root.get(property).as(String.class), convertCharset);
         orders.add(new OrderImpl(convertFunction, asc));
         return this;
@@ -165,7 +176,7 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
     }
 
 
-    private void join(CriteriaQuery<?> criteriaQuery) {
+    protected void joinQuery(CriteriaQuery<?> criteriaQuery) {
         Root<?> from = criteriaQuery.from(root.getJavaType());
         if (!CollectionUtils.isEmpty(root.getJoins())) {
             for (Join<F, ?> join : root.getJoins()) {
@@ -174,7 +185,7 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
         }
     }
 
-    private AbstractQuery<?> build(AbstractQuery<?> query) {
+    protected AbstractQuery<?> build(AbstractQuery<?> query) {
         Predicate[] predicateArray = new Predicate[this.where.size()];
         Predicate[] predicates = this.where.toArray(predicateArray);
         query.where(predicates);
