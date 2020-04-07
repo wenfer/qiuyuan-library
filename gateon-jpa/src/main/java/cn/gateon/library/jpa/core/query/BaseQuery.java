@@ -47,12 +47,12 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
 
     private List<Predicate> having;
 
-    BaseQuery(EntityManager entityManager, Class<F> from, Class<R> result, Root<F> root) {
+    BaseQuery(EntityManager entityManager, Class<F> from, Class<R> result) {
         this.entityManager = entityManager;
         this.result = result;
         this.cb = entityManager.getCriteriaBuilder();
         this.query = cb.createQuery(result);
-        this.root = root;
+        this.root = query.from(from);
     }
 
     BaseQuery(EntityManager entityManager, Class<R> result) {

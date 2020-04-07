@@ -54,8 +54,6 @@ public interface Queryer<F,R> {
 
     List<R> findAll();
 
-    long count();
-
     Page<R> page(PageRequest pageable);
 
     <SF, SR> SubQueryer<SR> subQuery(String property, Class<SF> from, Class<SR> result);
