@@ -1,6 +1,5 @@
 package cn.gateon.library.common.utils;
 
-import org.springframework.util.StringUtils;
 
 import java.util.regex.Pattern;
 
@@ -23,7 +22,7 @@ public class PhoneUtil {
      * 手机号隐藏中间4位
      */
     public static String hideMiddle(String phone) {
-        if (StringUtils.isEmpty(phone)) {
+        if (phone == null || phone.isEmpty()) {
             return "";
         }
         return phone.replaceAll(PATTERN, REPLACE);

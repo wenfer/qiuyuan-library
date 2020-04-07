@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapLikeType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +25,6 @@ import java.util.Map;
  * @author qiuyuan
  * @since v1.1
  */
-@Slf4j
 public class JsonUtil {
 
     /**
@@ -58,14 +56,10 @@ public class JsonUtil {
      * @return
      */
     public static <T> T fromJson(String json, Class<T> clazz) {
-        if (StringUtils.isEmpty(json)) {
-            return null;
-        }
         try {
             return MAPPER.readValue(json, clazz);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -73,8 +67,7 @@ public class JsonUtil {
         try {
             return MAPPER.readValue(json, clazz);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -82,8 +75,7 @@ public class JsonUtil {
         try {
             return MAPPER.readValue(json, type);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -91,8 +83,7 @@ public class JsonUtil {
         try {
             return MAPPER.readValue(json, type);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -100,8 +91,7 @@ public class JsonUtil {
         try {
             return MAPPER.readValue(reader, clazz);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -115,10 +105,8 @@ public class JsonUtil {
         try {
             return MAPPER.writeValueAsString(bean);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            log.error("json序列化出错:{}", e);
+            throw new GateonException("解析json失败", e);
         }
-        return "";
     }
 
 
@@ -132,8 +120,7 @@ public class JsonUtil {
         try {
             return NOT_NULL_MAPPER.writeValueAsString(o);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -141,8 +128,7 @@ public class JsonUtil {
         try {
             return NOT_NULL_MAPPER.writeValueAsBytes(o);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -160,8 +146,7 @@ public class JsonUtil {
         try {
             return MAPPER.readValue(json, MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, clazz));
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -170,8 +155,7 @@ public class JsonUtil {
             MapLikeType mapLikeType = MAPPER.getTypeFactory().constructMapType(mapClass, String.class, vClass);
             return MAPPER.readValue(json, mapLikeType);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -179,8 +163,7 @@ public class JsonUtil {
         try {
             return MAPPER.readValue(inputStream, importBeanClass);
         } catch (IOException e) {
-            log.error("json解析失败", e);
-            return null;
+            throw new GateonException("解析json失败", e);
         }
     }
 
@@ -188,8 +171,7 @@ public class JsonUtil {
         try {
             return MAPPER.readValue(json, MAPPER.getTypeFactory().constructCollectionType(LinkedList.class, clazz));
         } catch (IOException e) {
-            log.warn("解析json失败", e);
-            throw new GateonException(e.getMessage());
+            throw new GateonException("解析json失败", e);
         }
     }
 }
