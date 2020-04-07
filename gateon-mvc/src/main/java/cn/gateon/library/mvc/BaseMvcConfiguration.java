@@ -1,7 +1,9 @@
 package cn.gateon.library.mvc;
 
+import cn.gateon.library.mvc.exceptionhandle.ServiceExceptionHandle;
 import cn.gateon.library.mvc.factory.JacksonConverterFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.CollectionUtils;
@@ -19,6 +21,7 @@ import java.util.List;
  * @author qiuyuan
  * @since 1.2.5
  */
+@Import(ServiceExceptionHandle.class)
 public class BaseMvcConfiguration implements WebMvcConfigurer {
 
 
