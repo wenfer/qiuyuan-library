@@ -30,7 +30,7 @@ public class BaseMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        if (!CollectionUtils.isEmpty(resolvers)) {
+        if (!CollectionUtils.isEmpty(platformResolvers)) {
             resolvers.addAll(platformResolvers);
         }
     }
