@@ -66,7 +66,7 @@ public class ServiceExceptionHandle {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<?> requestMethodNotSupport(HttpRequestMethodNotSupportedException e) {
         String method = e.getMethod();
-        log.warn("不支持的请求方法:{},仅支持:{}", method, StrUtil.join(",", e.getSupportedMethods()));
+        log.warn("不支持的请求方法:{}", method);
         return ResponseEntity.ok(Result.fail(e.getLocalizedMessage()));
     }
 
