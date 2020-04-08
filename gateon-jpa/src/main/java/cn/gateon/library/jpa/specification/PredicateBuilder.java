@@ -1,5 +1,6 @@
 package cn.gateon.library.jpa.specification;
 
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -24,12 +25,12 @@ public interface PredicateBuilder<F> {
     /**
      * sql:   in()
      */
-    PredicateBuilder<F> in(String property, Object... value);
+    PredicateBuilder<F> in(String property, Collection<?> value);
 
     /**
      * sql:   not in()
      */
-    PredicateBuilder<F> nin(String property, Object... value);
+    PredicateBuilder<F> nin(String property, Collection<?> value);
 
     /**
      * sql:   >=
