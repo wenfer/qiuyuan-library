@@ -15,8 +15,8 @@ import javax.persistence.TypedQuery;
 public class CountQuery<F> extends BaseQuery<F, Long> implements CountQueryer<F> {
 
     public CountQuery(EntityManager entityManager, Class<F> from) {
-        super(entityManager, Long.class);
-        super.root = query.from(from);
+        super(entityManager, from,Long.class);
+
     }
 
     @Override

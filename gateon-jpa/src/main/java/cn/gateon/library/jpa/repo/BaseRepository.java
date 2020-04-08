@@ -1,6 +1,7 @@
 package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.jpa.core.CountQueryer;
+import cn.gateon.library.jpa.core.ExistsQueryer;
 import cn.gateon.library.jpa.core.Queryer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -26,6 +27,8 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
     <R> Queryer<T, R> multiSum(Class<R> clazz);
 
     CountQueryer<T> counter();
+
+    ExistsQueryer<T> exister();
 
     <R> R query(String sql, Class<R> r);
 

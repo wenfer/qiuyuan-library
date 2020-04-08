@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class WhereImpl<F, R> implements Where<F>, Having<F> {
     }
 
     @Override
-    public Where<F> in(String property, Object... value) {
+    public Where<F> in(String property, Collection<?> value) {
         if (value == null) {
             return this;
         }
@@ -62,7 +63,7 @@ public class WhereImpl<F, R> implements Where<F>, Having<F> {
     }
 
     @Override
-    public Where<F> nin(String property, Object... value) {
+    public Where<F> nin(String property, Collection<?> value) {
         if (value == null) {
             return this;
         }

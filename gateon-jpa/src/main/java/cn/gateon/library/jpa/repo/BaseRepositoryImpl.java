@@ -1,9 +1,11 @@
 package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.jpa.core.CountQueryer;
+import cn.gateon.library.jpa.core.ExistsQueryer;
 import cn.gateon.library.jpa.core.Queryer;
 import cn.gateon.library.jpa.core.query.CountQuery;
 import cn.gateon.library.jpa.core.query.DefaultQuery;
+import cn.gateon.library.jpa.core.query.ExistsQuery;
 import cn.gateon.library.jpa.core.query.MultiSumQuery;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
@@ -45,6 +47,11 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
     @Override
     public CountQueryer<T> counter() {
         return new CountQuery<>(entityManager, entityInformation.getJavaType());
+    }
+
+    @Override
+    public ExistsQueryer<T> exister() {
+        return new ExistsQuery<>(entityManager, entityInformation.getJavaType());
     }
 
     @Override
