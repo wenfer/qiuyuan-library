@@ -1,10 +1,12 @@
 package cn.gateon.library.mvc;
 
+import cn.gateon.library.mvc.converter.DateConverter;
 import cn.gateon.library.mvc.exceptionhandle.ServiceExceptionHandle;
 import cn.gateon.library.mvc.factory.JacksonConverterFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -24,7 +26,6 @@ import java.util.List;
 @Import(ServiceExceptionHandle.class)
 public class BaseMvcConfiguration implements WebMvcConfigurer {
 
-
     private List<HandlerMethodArgumentResolver> platformResolvers;
 
     public BaseMvcConfiguration(List<HandlerMethodArgumentResolver> resolvers) {
@@ -39,10 +40,17 @@ public class BaseMvcConfiguration implements WebMvcConfigurer {
     }
 
     @Override
-    @ConditionalOnClass(MappingJackson2HttpMessageConverter.class)
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new JacksonConverterFactory().build());
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new DateConverter());
     }
+
+
+    @Bean
+    @ConditionalOnClass(MappingJackson2HttpMessageConverter.class)
+    public MappingJackson2HttpMessageConverter jackson2HttpMessageConverter() {
+        return new JacksonConverterFactory().build();
+    }
+
 
     @Override
     @ConditionalOnClass(SpringfoxWebMvcConfiguration.class)
