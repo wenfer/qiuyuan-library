@@ -35,6 +35,9 @@ public class NoRepeatInteceptor implements HandlerInterceptor {
         this.properties = properties;
     }
 
+    /**
+     * rt = repeatToken
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String rt = request.getHeader("rt");
@@ -51,12 +54,4 @@ public class NoRepeatInteceptor implements HandlerInterceptor {
         return true;
     }
 
-    /**
-     * rt = repeatToken
-     */
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        String rt = request.getHeader("rt");
-        redisLockTemplate.unlock(properties.getPrefix() + LOCK_PREFIX + rt);
-    }
 }
