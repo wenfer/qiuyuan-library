@@ -16,6 +16,7 @@
         <module>gateon-feign</module>
         <module>gateon-json</module>
         <module>gateon-mvc</module>
+        <module>gateon-repeat-submit</module>
     </modules>
     <properties>
         <mbg-version>1.0-SNAPSHOT</mbg-version>
