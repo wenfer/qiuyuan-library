@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -68,6 +70,16 @@ public class ServiceExceptionHandle {
         String method = e.getMethod();
         log.warn("不支持的请求方法:{},仅支持:{}", method, StrUtil.join(",", e.getSupportedMethods()));
         return ResponseEntity.ok(Result.fail(e.getLocalizedMessage()));
+    }
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<?> bindException(BindException e) {
+        FieldError fieldError = e.getFieldError();
+        if (fieldError == null) {
+            return ResponseEntity.ok(Result.fail("参数绑定失败," + e.getMessage()));
+        }
+        log.warn("参数绑定失败,字段名:{},值:{}", fieldError.getField(), fieldError.getRejectedValue());
+        return ResponseEntity.ok(Result.fail("参数绑定失败,字段名:" + fieldError.getField() + ",值:" + fieldError.getRejectedValue()));
     }
 
     @ExceptionHandler(InvalidFormatException.class)
