@@ -30,7 +30,7 @@ public class MultiSumQuery<F, R> extends BaseQuery<F, R> implements SumQueryer<R
 
     @Override
     public Expression<Long> sum(String property) {
-        Expression<Long> longExpression = cb.sumAsLong(root.get(property));
+        Expression<Long> longExpression = cb.coalesce(cb.sumAsLong(root.get(property)), 0L);
         this.expressions.add(longExpression);
         return longExpression;
     }
