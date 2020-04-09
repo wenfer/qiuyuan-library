@@ -35,6 +35,11 @@
             </dependency>
             <dependency>
                 <groupId>cn.gateon.library</groupId>
+                <artifactId>gateon-repeat-submit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.gateon.library</groupId>
                 <artifactId>gateon-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>
