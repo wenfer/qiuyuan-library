@@ -110,7 +110,7 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
 
     @Override
     public <Z> CollectionQueryer<Z> joinCollection(String property) {
-        Join<F, Z> objectObjectCollectionJoin = root.joinList(property, JoinType.LEFT);
+        Join<F, Z> objectObjectCollectionJoin = root.join(property, JoinType.LEFT);
         return new CollectionQuery<>(objectObjectCollectionJoin, cb);
     }
 
