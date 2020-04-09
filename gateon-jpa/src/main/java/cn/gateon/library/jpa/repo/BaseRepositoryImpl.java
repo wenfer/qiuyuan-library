@@ -3,6 +3,7 @@ package cn.gateon.library.jpa.repo;
 import cn.gateon.library.jpa.core.CountQueryer;
 import cn.gateon.library.jpa.core.ExistsQueryer;
 import cn.gateon.library.jpa.core.Queryer;
+import cn.gateon.library.jpa.core.SumQueryer;
 import cn.gateon.library.jpa.core.query.CountQuery;
 import cn.gateon.library.jpa.core.query.DefaultQuery;
 import cn.gateon.library.jpa.core.query.ExistsQuery;
@@ -40,7 +41,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
     }
 
     @Override
-    public <R> Queryer<T, R> multiSum(Class<R> clazz) {
+    public <R> SumQueryer<R> multiSum(Class<R> clazz) {
         return new MultiSumQuery<>(entityManager, entityInformation.getJavaType(), clazz);
     }
 
