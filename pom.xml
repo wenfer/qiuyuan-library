@@ -7,7 +7,7 @@
     <groupId>cn.gateon.library</groupId>
     <artifactId>gateon-library</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.8.8-RELEASE</version>
+    <version>1.2.8.9-RELEASE</version>
     <modules>
         <module>gateon-jpa</module>
         <module>gateon-common</module>
