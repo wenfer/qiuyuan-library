@@ -21,6 +21,7 @@ public class DefaultSubQuery<R> implements SubQueryer<R> {
     public DefaultSubQuery(Where where, Subquery<R> subquery) {
         this.where = where;
         this.subquery = subquery;
+
     }
 
     @Override

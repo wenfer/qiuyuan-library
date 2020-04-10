@@ -1,5 +1,7 @@
 package cn.gateon.library.jpa.core;
 
+import java.util.Collection;
+
 /**
  * <p>
  * </p>
@@ -11,7 +13,7 @@ public interface CollectionQueryer<C> {
 
     CollectionQueryer<C> eq(C value);
 
-    CollectionQueryer<C> in(Object... value);
+    CollectionQueryer<C> in(Collection<C> values);
 
 
 }

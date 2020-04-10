@@ -2,10 +2,12 @@ package cn.gateon.library.jpa.core.query;
 
 import cn.gateon.library.jpa.core.CollectionQueryer;
 
-import javax.persistence.criteria.CollectionJoin;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * <p>
@@ -20,21 +22,24 @@ public class CollectionQuery<C> implements CollectionQueryer<C> {
 
     private CriteriaBuilder criteriaBuilder;
 
-    public CollectionQuery(Join<?, C> cCollectionJoin, CriteriaBuilder criteriaBuilder) {
+    private final List<Predicate> where;
+
+    public CollectionQuery(Join<?, C> cCollectionJoin, CriteriaBuilder criteriaBuilder, List<Predicate> where) {
         this.root = cCollectionJoin;
+        this.where = where;
         this.criteriaBuilder = criteriaBuilder;
 
     }
 
     @Override
     public CollectionQueryer<C> eq(C value) {
-        criteriaBuilder.equal(root,value);
+        where.add(criteriaBuilder.equal(root, value));
         return this;
     }
 
     @Override
-    public CollectionQueryer<C> in(Object... value) {
-        criteriaBuilder.in(root).in(value);
+    public CollectionQueryer<C> in(Collection<C> values) {
+        where.add(criteriaBuilder.in(root).in(values));
         return this;
     }
 }
