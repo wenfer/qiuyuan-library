@@ -55,13 +55,6 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
         this.root = query.from(from);
     }
 
-/*    BaseQuery(EntityManager entityManager, Class<R> result) {
-        this.entityManager = entityManager;
-        this.result = result;
-        this.cb = entityManager.getCriteriaBuilder();
-        this.query = cb.createQuery(result);
-    }*/
-
     /**
      * 如需要额外构造或自定义构造，覆写此方法
      */
@@ -111,7 +104,7 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
     @Override
     public <Z> CollectionQueryer<Z> joinCollection(String property) {
         Join<F, Z> objectObjectCollectionJoin = root.join(property, JoinType.LEFT);
-        return new CollectionQuery<>(objectObjectCollectionJoin, cb);
+        return new CollectionQuery<>(objectObjectCollectionJoin, cb, where);
     }
 
     @Override

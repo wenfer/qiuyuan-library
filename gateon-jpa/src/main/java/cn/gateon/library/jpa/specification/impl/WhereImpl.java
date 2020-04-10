@@ -1,15 +1,14 @@
 package cn.gateon.library.jpa.specification.impl;
 
+import cn.gateon.library.jpa.core.SubQueryer;
 import cn.gateon.library.jpa.core.jpa.FindInSetFunction;
 import cn.gateon.library.jpa.specification.Having;
+import cn.gateon.library.jpa.specification.PredicateBuilder;
 import cn.gateon.library.jpa.specification.Where;
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -136,6 +135,13 @@ public class WhereImpl<F, R> implements Where<F>, Having<F> {
         predicates.add(isNull ? cb.isNull(root.get(property)) : cb.isNotNull(root.get(property)));
         return this;
     }
+
+    @Override
+    public <S> PredicateBuilder<F> any(String property, Subquery<S> subQuery) {
+        predicates.add(cb.equal(root.get(property), cb.any(subQuery)));
+        return this;
+    }
+
 
     @Override
     public Where<F> like(String property, String value, int position) {

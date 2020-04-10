@@ -1,5 +1,6 @@
 package cn.gateon.library.jpa.specification;
 
+import javax.persistence.criteria.Subquery;
 import java.util.Collection;
 import java.util.Date;
 
@@ -73,6 +74,16 @@ public interface PredicateBuilder<F> {
      * sql:  (isNull?'':'not')  is null
      */
     PredicateBuilder<F> isNull(String property, boolean isNull);
+
+    /**
+     * <code>
+     * SubQueryer<Product> subqueryer = query.subquery("id",F.class,R.class);
+     * subqueryer.where().eq("","")
+     * <p>
+     * baseQueryer.where().any("id",subquery.build());
+     * </code>
+     */
+    <S> PredicateBuilder<F> any(String property, Subquery<S> subQuery);
 
     /**
      * @param position -1 左模糊   0 全模糊  1 右模糊
