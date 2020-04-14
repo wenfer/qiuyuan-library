@@ -7,6 +7,7 @@ import cn.gateon.library.repeatsubmit.RepeatSubmitProperties;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +30,7 @@ public class NoRepeatInteceptor implements HandlerInterceptor {
 
     private RepeatSubmitProperties properties;
 
-    private Result result = Result.fail("请求正在处理，请勿重复提交");
+    private Result result = Result.fail(-2, "请求正在处理，请勿重复提交");
 
     public NoRepeatInteceptor(RedisLockTemplate redisLockTemplate, RepeatSubmitProperties properties) {
         this.redisLockTemplate = redisLockTemplate;
@@ -49,6 +50,7 @@ public class NoRepeatInteceptor implements HandlerInterceptor {
             log.info("rt:{} 可能为重复提交", rt);
             PrintWriter writer = response.getWriter();
             response.setCharacterEncoding(CharsetUtil.UTF_8);
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
             writer.write(JsonUtil.toJson(result));
             writer.close();
             return false;
