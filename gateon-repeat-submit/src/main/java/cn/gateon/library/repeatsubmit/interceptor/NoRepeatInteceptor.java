@@ -50,7 +50,6 @@ public class NoRepeatInteceptor implements HandlerInterceptor {
             log.info("rt:{} 可能为重复提交", rt);
             PrintWriter writer = response.getWriter();
             response.setCharacterEncoding(CharsetUtil.UTF_8);
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
             writer.write(JsonUtil.toJson(result));
             writer.close();
             return false;
