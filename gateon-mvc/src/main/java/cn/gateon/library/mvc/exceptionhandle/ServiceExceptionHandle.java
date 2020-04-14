@@ -3,7 +3,6 @@ package cn.gateon.library.mvc.exceptionhandle;
 import cn.gateon.library.common.exception.GateonException;
 import cn.gateon.library.common.exception.RemoteMethodException;
 import cn.gateon.library.common.rest.Result;
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
@@ -32,36 +31,35 @@ public class ServiceExceptionHandle {
 
     @ExceptionHandler(GateonException.class)
     public ResponseEntity<?> handleControllerException(GateonException ex) {
-        StackTraceElement stackTraceElement = ex.getStackTrace()[0];
+/*        StackTraceElement stackTraceElement = ex.getStackTrace()[0];
         for (StackTraceElement traceElement : ex.getStackTrace()) {
             if (!StrUtil.equals(traceElement.getClassName(), "cn.gateon.mengbg.feign.FeignConfiguration") && StrUtil.contains("gateon", stackTraceElement.getClassName())) {
                 stackTraceElement = traceElement;
             }
-        }
-        log.warn("业务异常:{},class:{},linenumber:{}", ex.getMessage(),
-                stackTraceElement.getClassName(), stackTraceElement.getLineNumber());
-        return ResponseEntity.status(500).body(Result.fail(ex.getLocalizedMessage()));
+        }*/
+        log.error("业务异常:", ex);
+        return ResponseEntity.ok().body(Result.fail(1, ex.getLocalizedMessage()));
     }
 
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleControllerException(Exception ex) {
         log.error("预料之外的异常:", ex);
-        return ResponseEntity.status(500).body(Result.fail(ex.getLocalizedMessage()));
+        return ResponseEntity.ok().body(Result.fail(ex.getLocalizedMessage()));
     }
 
 
     @ExceptionHandler(ClientAbortException.class)
     public ResponseEntity<?> clientAbortException(ClientAbortException ex) {
         log.warn("调用超时导致客户端中断链接:", ex);
-        return ResponseEntity.status(500).build();
+        return ResponseEntity.ok().build();
     }
 
 
     @ExceptionHandler(RemoteMethodException.class)
     public ResponseEntity<?> remoteException(RemoteMethodException ex) {
         log.warn("接口调用失败，key:{},参数:{},返回:{}", ex.getMethodKey(), ex.getParam(), ex.getResult());
-        return ResponseEntity.ok(Result.fail(-1, ex.getMsg()));
+        return ResponseEntity.ok(Result.fail(2, ex.getMsg()));
     }
 
 
