@@ -32,14 +32,13 @@ public class ServiceExceptionHandle {
 
     @ExceptionHandler(GateonException.class)
     public ResponseEntity<?> handleControllerException(GateonException ex) {
-        StackTraceElement stackTraceElement = ex.getStackTrace()[0];
+/*        StackTraceElement stackTraceElement = ex.getStackTrace()[0];
         for (StackTraceElement traceElement : ex.getStackTrace()) {
             if (!StrUtil.equals(traceElement.getClassName(), "cn.gateon.mengbg.feign.FeignConfiguration") && StrUtil.contains("gateon", stackTraceElement.getClassName())) {
                 stackTraceElement = traceElement;
             }
-        }
-        log.warn("业务异常:{},class:{},linenumber:{}", ex.getMessage(),
-                stackTraceElement.getClassName(), stackTraceElement.getLineNumber());
+        }*/
+        log.error("业务异常:", ex);
         return ResponseEntity.status(500).body(Result.fail(ex.getLocalizedMessage()));
     }
 
