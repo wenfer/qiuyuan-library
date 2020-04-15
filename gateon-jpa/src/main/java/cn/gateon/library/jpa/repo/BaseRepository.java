@@ -27,6 +27,13 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
 
     <R> SumQueryer<R> multiSum(Class<R> clazz);
 
+    /**
+     * 单字段求和
+     * @see SumQueryer#sum(String)  可复用此方法
+     * @since 1.3.1
+     */
+    SumQueryer<Long> sum();
+
     CountQueryer<T> counter();
 
     ExistsQueryer<T> exister();

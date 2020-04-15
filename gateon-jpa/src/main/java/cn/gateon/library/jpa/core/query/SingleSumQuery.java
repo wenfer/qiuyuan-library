@@ -1,5 +1,7 @@
 package cn.gateon.library.jpa.core.query;
 
+import cn.gateon.library.jpa.core.SumQueryer;
+
 import javax.persistence.EntityManager;
 
 /**
@@ -9,11 +11,16 @@ import javax.persistence.EntityManager;
  * @author qiuyuan
  * @since 1.0
  */
-public class SingleSumQuery<F> extends BaseQuery<F, Long> {
+public class SingleSumQuery<F> extends BaseQuery<F, Long> implements SumQueryer<Long> {
 
-    public SingleSumQuery(String property, EntityManager entityManager, Class<F> from, Class<Long> result) {
-        super(entityManager, from, result);
-        query.select(cb.sum(root.get(property)));
+    public SingleSumQuery(EntityManager entityManager, Class<F> from) {
+        super(entityManager, from, Long.class);
+
     }
 
+    @Override
+    public SumQueryer<Long> sum(String property) {
+        query.select(cb.sum(root.get(property)));
+        return this;
+    }
 }

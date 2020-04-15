@@ -1,7 +1,5 @@
 package cn.gateon.library.jpa.core;
 
-import javax.persistence.criteria.Expression;
-
 /**
  * <p>
  * </p>
@@ -11,6 +9,6 @@ import javax.persistence.criteria.Expression;
  */
 public interface SumQueryer<R> {
 
-    Expression<Long> sum(String property);
+    SumQueryer<R> sum(String property);
 
 }
