@@ -11,7 +11,7 @@ import javax.persistence.EntityManager;
  * @author qiuyuan
  * @since 1.0
  */
-public class SingleSumQuery<F> extends BaseQuery<F, Long> implements SumQueryer<Long> {
+public class SingleSumQuery<F> extends BaseQuery<F, Long> implements SumQueryer<F> {
 
     public SingleSumQuery(EntityManager entityManager, Class<F> from) {
         super(entityManager, from, Long.class);
@@ -19,7 +19,7 @@ public class SingleSumQuery<F> extends BaseQuery<F, Long> implements SumQueryer<
     }
 
     @Override
-    public SumQueryer<Long> sum(String property) {
+    public SumQueryer<F> sum(String property) {
         query.select(cb.sum(root.get(property)));
         return this;
     }
