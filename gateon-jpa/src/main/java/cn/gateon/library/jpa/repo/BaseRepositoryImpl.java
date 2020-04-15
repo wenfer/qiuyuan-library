@@ -40,7 +40,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
     }
 
     @Override
-    public SingleSumQueryer<T> sumQueryer() {
+    public SingleSumQueryer<T> singleSum() {
         return new SingleSumQuery<>(entityManager, entityInformation.getJavaType());
     }
 

@@ -28,7 +28,7 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
      * 单字段求和
      * @since 1.3.1
      */
-    SingleSumQueryer<T> sumQueryer();
+    SingleSumQueryer<T> singleSum();
 
     CountQueryer<T> counter();
 
