@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.security.auth.login.LoginException;
 import java.lang.reflect.Method;
 
 /**
@@ -46,6 +47,12 @@ public class ServiceExceptionHandle {
     public ResponseEntity<?> handleControllerException(Exception ex) {
         log.error("预料之外的异常:", ex);
         return ResponseEntity.ok().body(Result.fail(ex.getLocalizedMessage()));
+    }
+
+    @ExceptionHandler(LoginException.class)
+    public ResponseEntity<?> loginException(LoginException ex) {
+        log.error("认证失败:", ex);
+        return ResponseEntity.ok().body(Result.fail(-5, "权限认证失败"));
     }
 
 
