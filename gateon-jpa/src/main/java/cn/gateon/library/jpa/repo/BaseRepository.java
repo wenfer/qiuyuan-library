@@ -1,9 +1,6 @@
 package cn.gateon.library.jpa.repo;
 
-import cn.gateon.library.jpa.core.CountQueryer;
-import cn.gateon.library.jpa.core.ExistsQueryer;
-import cn.gateon.library.jpa.core.Queryer;
-import cn.gateon.library.jpa.core.SumQueryer;
+import cn.gateon.library.jpa.core.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -25,14 +22,13 @@ public interface BaseRepository<T, ID extends Serializable> extends JpaRepositor
 
     <R> Queryer<T, R> queryer(Class<R> resultClass);
 
-    <R> SumQueryer<R> multiSum(Class<R> clazz);
+    <R> SumQueryer<T,R> multiSum(Class<R> clazz);
 
     /**
      * 单字段求和
-     * @see SumQueryer#sum(String)  可复用此方法
      * @since 1.3.1
      */
-    SumQueryer<T> sumQueryer();
+    SingleSumQueryer<T> sumQueryer();
 
     CountQueryer<T> counter();
 
