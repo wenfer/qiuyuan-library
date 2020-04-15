@@ -14,7 +14,7 @@ import java.util.List;
  * @author qiuyuan
  * @since 1.0
  */
-public class MultiSumQuery<F, R> extends BaseQuery<F, R> implements SumQueryer<R> {
+public class MultiSumQuery<F, R> extends BaseQuery<F, R> implements SumQueryer<F,R> {
 
     public MultiSumQuery(EntityManager entityManager, Class<F> from, Class<R> result) {
         super(entityManager, from, result);
@@ -29,7 +29,7 @@ public class MultiSumQuery<F, R> extends BaseQuery<F, R> implements SumQueryer<R
     }
 
     @Override
-    public SumQueryer<R> sum(String property) {
+    public SumQueryer<F,R> sum(String property) {
         Expression<Long> longExpression = cb.coalesce(cb.sumAsLong(root.get(property)), 0L);
         this.expressions.add(longExpression);
         return this;
