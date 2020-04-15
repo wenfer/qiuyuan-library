@@ -7,8 +7,8 @@ package cn.gateon.library.jpa.core;
  * @author qiuyuan
  * @since 1.2
  */
-public interface SumQueryer<R> {
+public interface SumQueryer<F> extends Queryer<F, Long> {
 
-    SumQueryer<R> sum(String property);
+    SumQueryer<F> sum(String property);
 
 }
