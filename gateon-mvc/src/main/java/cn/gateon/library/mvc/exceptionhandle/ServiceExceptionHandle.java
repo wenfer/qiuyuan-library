@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -52,7 +53,7 @@ public class ServiceExceptionHandle {
     @ExceptionHandler(LoginException.class)
     public ResponseEntity<?> loginException(LoginException ex) {
         log.error("认证失败:", ex);
-        return ResponseEntity.ok().body(Result.fail(-5, "权限认证失败"));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Result.fail(-5, "权限认证失败"));
     }
 
 
