@@ -22,7 +22,7 @@ import java.io.PrintWriter;
  * @since 1.3
  */
 @Slf4j
-public class NoRepeatInteceptor implements HandlerInterceptor {
+public class NoRepeatInterceptor implements HandlerInterceptor {
 
     private RedisLockTemplate redisLockTemplate;
 
@@ -32,7 +32,7 @@ public class NoRepeatInteceptor implements HandlerInterceptor {
 
     private Result result = Result.fail(-2, "请求正在处理，请勿重复提交");
 
-    public NoRepeatInteceptor(RedisLockTemplate redisLockTemplate, RepeatSubmitProperties properties) {
+    public NoRepeatInterceptor(RedisLockTemplate redisLockTemplate, RepeatSubmitProperties properties) {
         this.redisLockTemplate = redisLockTemplate;
         this.properties = properties;
     }
@@ -50,6 +50,7 @@ public class NoRepeatInteceptor implements HandlerInterceptor {
             log.info("rt:{} 可能为重复提交", rt);
             PrintWriter writer = response.getWriter();
             response.setCharacterEncoding(CharsetUtil.UTF_8);
+            response.setContentType("text/html; charset=utf-8");
             writer.write(JsonUtil.toJson(result));
             writer.close();
             return false;

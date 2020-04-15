@@ -2,7 +2,7 @@ package cn.gateon.library.repeatsubmit;
 
 import cn.gateon.library.redis.EnableRedis;
 import cn.gateon.library.redis.RedisLockTemplate;
-import cn.gateon.library.repeatsubmit.interceptor.NoRepeatInteceptor;
+import cn.gateon.library.repeatsubmit.interceptor.NoRepeatInterceptor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -31,6 +31,6 @@ public class RepeatSubmitConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new NoRepeatInteceptor(redisLockTemplate, properties)).addPathPatterns("/**");
+        registry.addInterceptor(new NoRepeatInterceptor(redisLockTemplate, properties)).addPathPatterns("/**");
     }
 }
