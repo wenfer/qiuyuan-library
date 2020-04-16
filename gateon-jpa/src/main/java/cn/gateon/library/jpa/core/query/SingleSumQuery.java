@@ -22,7 +22,7 @@ public class SingleSumQuery<F> extends BaseQuery<F, Long> implements SingleSumQu
     @Override
     public Long sum(String property) {
         query.select(cb.coalesce(cb.sumAsLong(root.get(property)), 0L));
-        joinQuery(query);
+        //joinQuery(query);
         build(query);
         TypedQuery<Long> countQuery = entityManager.createQuery(query);
         return countQuery.getSingleResult();
