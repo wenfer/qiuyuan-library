@@ -22,7 +22,7 @@ public class CountQuery<F> extends BaseQuery<F, Long> implements CountQueryer<F>
     @Override
     public long count() {
         query.select(cb.count(root));
-        joinQuery(query);
+        //joinQuery(query);
         build(query);
         TypedQuery<Long> countQuery = entityManager.createQuery(query);
         return countQuery.getSingleResult();
