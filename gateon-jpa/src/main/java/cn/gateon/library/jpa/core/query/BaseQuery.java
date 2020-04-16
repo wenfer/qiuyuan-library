@@ -98,12 +98,14 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
     @Override
     public Where<F> join(String property) {
         Join<F, R> join = root.join(property);
+        query.distinct(true);
         return new WhereImpl<>(cb, join, where);
     }
 
     @Override
     public <Z> CollectionQueryer<Z> joinCollection(String property) {
         Join<F, Z> objectObjectCollectionJoin = root.join(property, JoinType.LEFT);
+        query.distinct(true);
         return new CollectionQuery<>(objectObjectCollectionJoin, cb, where);
     }
 

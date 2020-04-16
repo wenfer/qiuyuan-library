@@ -2,6 +2,7 @@ package cn.gateon.library.mvc.exceptionhandle;
 
 import cn.gateon.library.common.exception.GateonException;
 import cn.gateon.library.common.exception.RemoteMethodException;
+import cn.gateon.library.common.exception.ServiceException;
 import cn.gateon.library.common.rest.Result;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,12 @@ public class ServiceExceptionHandle {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Result.fail(-5, "权限认证失败"));
     }
 
+
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<?> serviceException(ServiceException ex) {
+        log.error("服务调用异常:", ex);
+        return ResponseEntity.status(500).body(Result.fail(ex.getMessage()));
+    }
 
     @ExceptionHandler(ClientAbortException.class)
     public ResponseEntity<?> clientAbortException(ClientAbortException ex) {
