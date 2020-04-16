@@ -179,6 +179,7 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
     protected void joinQuery(CriteriaQuery<?> criteriaQuery) {
         Root<?> from = criteriaQuery.from(root.getJavaType());
         if (!CollectionUtils.isEmpty(root.getJoins())) {
+            query.distinct(true);
             for (Join<F, ?> join : root.getJoins()) {
                 from.join(join.getAttribute().getName(), join.getJoinType());
             }
