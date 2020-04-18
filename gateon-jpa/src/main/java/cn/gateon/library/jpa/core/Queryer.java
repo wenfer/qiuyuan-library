@@ -52,8 +52,6 @@ public interface Queryer<F,R> {
 
     R findOne();
 
-    boolean exists();
-
     List<R> findAll();
 
     Page<R> page(PageRequest pageable);

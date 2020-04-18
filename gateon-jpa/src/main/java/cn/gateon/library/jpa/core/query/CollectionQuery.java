@@ -39,7 +39,7 @@ public class CollectionQuery<C> implements CollectionQueryer<C> {
 
     @Override
     public CollectionQueryer<C> in(Collection<C> values) {
-        where.add(criteriaBuilder.in(root).in(values));
+        where.add(root.in(values));
         return this;
     }
 }

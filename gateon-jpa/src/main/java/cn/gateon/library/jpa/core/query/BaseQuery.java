@@ -158,10 +158,6 @@ public abstract class BaseQuery<F, R> implements Queryer<F, R> {
         }
     }
 
-    @Override
-    public boolean exists() {
-        return false;
-    }
 
     @Override
     public List<R> findAll() {
