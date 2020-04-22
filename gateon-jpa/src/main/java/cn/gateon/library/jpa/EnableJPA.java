@@ -1,7 +1,9 @@
 package cn.gateon.library.jpa;
 
+import cn.gateon.library.jpa.factory.BaseRepositoryFactoryBean;
 import cn.gateon.library.jpa.repo.BaseRepositoryImpl;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.query.QueryLookupStrategy;
 
 import java.lang.annotation.*;
 
@@ -15,6 +17,9 @@ import java.lang.annotation.*;
 @Inherited
 @EnableJpaRepositories(
         value = {"**.repository.**", "**.model"},
-        repositoryBaseClass = BaseRepositoryImpl.class)
+        repositoryBaseClass = BaseRepositoryImpl.class,
+        queryLookupStrategy = QueryLookupStrategy.Key.CREATE_IF_NOT_FOUND,
+        repositoryFactoryBeanClass = BaseRepositoryFactoryBean.class
+)
 public @interface EnableJPA {
 }
