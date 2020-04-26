@@ -1,4 +1,4 @@
-package cn.gateon.library.jpa.specification;
+package cn.gateon.library.jpa.repo;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Path;
@@ -12,7 +12,7 @@ import javax.persistence.criteria.Predicate;
  * @since 1.4
  */
 @FunctionalInterface
-public interface CommonBuilder {
+interface CommonBuilder {
 
     Predicate build(CriteriaBuilder cb, Path<?> expression);
 

@@ -21,7 +21,7 @@ import java.util.List;
  * @author qiuyuan
  * @since 2.0
  */
-public class DefaultSearcherImpl<R> extends AbstractSearcherImpl<R> implements Searcher<R> {
+class DefaultSearcherImpl<R> extends AbstractSearcherImpl<R> implements Searcher<R> {
 
     private List<Order> orders = new ArrayList<>();
 

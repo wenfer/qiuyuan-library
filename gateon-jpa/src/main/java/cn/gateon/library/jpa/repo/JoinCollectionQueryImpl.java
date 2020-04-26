@@ -15,7 +15,7 @@ import java.util.List;
  * @author qiuyuan
  * @since 2.0
  */
-public class JoinCollectionQueryImpl<T> extends AbstractSearcherImpl<T> implements JoinCollectionQuery<T> {
+class JoinCollectionQueryImpl<T> extends AbstractSearcherImpl<T> implements JoinCollectionQuery<T> {
     JoinCollectionQueryImpl(Join<?, T> join, CriteriaBuilder cb, List<Predicate> predicates) {
         super(cb, join, predicates);
     }
