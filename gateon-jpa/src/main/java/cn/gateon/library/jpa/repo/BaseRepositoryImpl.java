@@ -2,8 +2,8 @@ package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.common.data.Page;
 import cn.gateon.library.common.data.PageRequest;
-import cn.gateon.library.jpa.core.*;
-import cn.gateon.library.jpa.core.query.*;
+import cn.gateon.library.jpa.searcher.MultiSumSearcher;
+import cn.gateon.library.jpa.searcher.Searcher;
 import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
@@ -14,9 +14,6 @@ import com.querydsl.jpa.impl.AbstractJPAQuery;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.jpa.repository.query.JpaEntityGraph;
 import org.springframework.data.jpa.repository.support.CrudMethodMetadata;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.Querydsl;
@@ -24,7 +21,6 @@ import org.springframework.data.jpa.repository.support.QuerydslJpaRepository;
 import org.springframework.data.querydsl.EntityPathResolver;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
-import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,8 +54,6 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
 
     private final EntityPath<T> path;
 
-    private final PathBuilder<T> builder;
-
     private final Querydsl querydsl;
 
     public BaseRepositoryImpl(JpaEntityInformation<T, ID> entityInformation, EntityManager entityManager) {
@@ -78,8 +72,7 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
                               EntityPathResolver resolver) {
         this.entityInformation = entityInformation;
         this.path = resolver.createPath(entityInformation.getJavaType());
-        this.builder = new PathBuilder<T>(path.getType(), path.getMetadata());
-        this.querydsl = new Querydsl(entityManager, builder);
+        this.querydsl = new Querydsl(entityManager, new PathBuilder<T>(path.getType(), path.getMetadata()));
         this.entityManager = entityManager;
     }
 
@@ -91,36 +84,6 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
      */
     public void setRepositoryMethodMetadata(CrudMethodMetadata crudMethodMetadata) {
         this.metadata = crudMethodMetadata;
-    }
-
-    @Override
-    public Queryer<T, T> queryer() {
-        return new DefaultQuery<>(entityManager, entityInformation.getJavaType(), entityInformation.getJavaType());
-    }
-
-    @Override
-    public <S> Queryer<T, S> queryer(Class<S> resultClass) {
-        return new DefaultQuery<>(entityManager, entityInformation.getJavaType(), resultClass);
-    }
-
-    @Override
-    public <R> SumQueryer<T, R> multiSum(Class<R> clazz) {
-        return new MultiSumQuery<>(entityManager, entityInformation.getJavaType(), clazz);
-    }
-
-    @Override
-    public SingleSumQueryer<T> singleSum() {
-        return new SingleSumQuery<>(entityManager, entityInformation.getJavaType());
-    }
-
-    @Override
-    public CountQueryer<T> counter() {
-        return new CountQuery<>(entityManager, entityInformation.getJavaType());
-    }
-
-    @Override
-    public ExistsQueryer<T> exister() {
-        return new ExistsQuery<>(entityManager, entityInformation.getJavaType());
     }
 
     @Override
@@ -150,6 +113,16 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
 
 
     @Override
+    public Searcher<T> searcher() {
+        return new DefaultSearcherImpl<>(entityManager, entityManager.getCriteriaBuilder(), entityInformation.getJavaType());
+    }
+
+    @Override
+    public <R> MultiSumSearcher<R> multiSum(Class<R> resultClass) {
+        return new MultiSumSearcherImpl<>(entityManager, entityManager.getCriteriaBuilder(), entityInformation.getJavaType(), resultClass);
+    }
+
+    @Override
     public long count(Predicate predicate) {
         return createQuery(predicate).fetchCount();
     }
@@ -173,7 +146,6 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
     @Override
     public List<T> findAll(OrderSpecifier<?>... orders) {
         Assert.notNull(orders, "Order specifiers must not be null!");
-
         return executeSorted(createQuery(new Predicate[0]).select(path), orders);
     }
 
@@ -283,16 +255,10 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
     }
 
 
-    private JpaEntityGraph getEntityGraph(EntityGraph entityGraph) {
-        String fallbackName = entityInformation.getEntityName() + "." + metadata.getMethod().getName();
-        return new JpaEntityGraph(entityGraph, fallbackName);
-    }
-
     @Nullable
     protected CrudMethodMetadata getRepositoryMethodMetadata() {
         return metadata;
     }
-
 
     private List<T> executeSorted(JPQLQuery<T> query, OrderSpecifier<?>... orders) {
         return executeSorted(query, new QSort(orders));

@@ -1,5 +1,7 @@
 package cn.gateon.library.jpa.specification;
 
+import cn.gateon.library.jpa.enums.OperatorEnum;
+
 /**
  * <p>
  * </p>
@@ -7,11 +9,10 @@ package cn.gateon.library.jpa.specification;
  * @author qiuyuan
  * @since 1.2
  */
-public interface Or<F> extends Where<F> {
+public interface Or extends Where {
 
-    /**
-     * 构造or查询需要显式调用此方法
-     */
-    void build();
-
+    @Override
+    default OperatorEnum operator() {
+        return OperatorEnum.OR;
+    }
 }
