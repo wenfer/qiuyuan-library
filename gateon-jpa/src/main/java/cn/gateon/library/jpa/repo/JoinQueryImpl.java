@@ -15,7 +15,7 @@ import java.util.List;
  * @author qiuyuan
  * @since 2.0
  */
-public class JoinQueryImpl<R> extends AbstractSearcherImpl<R> implements JoinQuery {
+class JoinQueryImpl<R> extends AbstractSearcherImpl<R> implements JoinQuery {
 
     JoinQueryImpl(CriteriaBuilder cb, From<?, ?> root, List<Predicate> predicates) {
         super(cb, root, predicates);

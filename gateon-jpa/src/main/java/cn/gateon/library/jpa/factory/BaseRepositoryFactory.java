@@ -1,5 +1,6 @@
 package cn.gateon.library.jpa.factory;
 
+import cn.gateon.library.jpa.repo.BaseRepository;
 import cn.gateon.library.jpa.repo.BaseRepositoryImpl;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.data.jpa.projection.CollectionAwareProjectionFactory;
@@ -35,6 +36,8 @@ public class BaseRepositoryFactory extends RepositoryFactorySupport {
 
     private final QueryExtractor extractor;
 
+    private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
+
     /**
      * Creates a new {@link JpaRepositoryFactory}.
      *
@@ -44,6 +47,8 @@ public class BaseRepositoryFactory extends RepositoryFactorySupport {
         Assert.notNull(entityManager, "EntityManager must not be null!");
         this.entityManager = entityManager;
         this.extractor = PersistenceProvider.fromEntityManager(entityManager);
+        this.crudMethodMetadataPostProcessor = new CrudMethodMetadataPostProcessor();
+        addRepositoryProxyPostProcessor(crudMethodMetadataPostProcessor);
     }
 
     @Override
@@ -55,7 +60,9 @@ public class BaseRepositoryFactory extends RepositoryFactorySupport {
     @Override
     protected Object getTargetRepository(RepositoryInformation information) {
         JpaEntityInformation<?, ?> entityInformation = getEntityInformation(information.getDomainType());
-        return getTargetRepositoryViaReflection(information, entityInformation, entityManager);
+        BaseRepositoryImpl<?, ?> repository = getTargetRepositoryViaReflection(information, entityInformation, entityManager);
+        repository.setRepositoryMethodMetadata(crudMethodMetadataPostProcessor.getCrudMethodMetadata());
+        return repository;
     }
 
     /**

@@ -1,9 +1,6 @@
-package cn.gateon.library.jpa.specification.impl;
+package cn.gateon.library.jpa.specification;
 
 import cn.gateon.library.jpa.core.jpa.FindInSetFunction;
-import cn.gateon.library.jpa.specification.CommonBuilder;
-import cn.gateon.library.jpa.specification.PredicateBuilder;
-import cn.gateon.library.jpa.specification.Where;
 import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.util.StringUtils;
 
@@ -20,9 +17,20 @@ import java.util.Map;
  * @author qiuyuan
  * @since 1.0
  */
-public class WhereImpl implements Where {
+class WhereImpl implements Where {
+
+    private OperatorEnum operator;
 
     protected Map<String, CommonBuilder> builders = new HashMap<>();
+
+    public WhereImpl(OperatorEnum operatorEnum) {
+        this.operator = operatorEnum;
+    }
+
+    @Override
+    public OperatorEnum operator() {
+        return operator;
+    }
 
     @Override
     public Where eq(String property, Object value) {

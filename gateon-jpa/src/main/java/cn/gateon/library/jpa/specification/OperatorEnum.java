@@ -5,7 +5,8 @@ package cn.gateon.library.jpa.specification;
  * </p>
  *
  * @author qiuyuan
- * @since 1.2
+ * @since 1.0
  */
-public interface Having extends PredicateBuilder{
+public enum OperatorEnum {
+    AND,OR
 }
