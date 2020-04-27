@@ -1,4 +1,4 @@
-package cn.gateon.library.jpa.repo;
+package cn.gateon.library.dsl.repo;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.query.Jpa21Utils;

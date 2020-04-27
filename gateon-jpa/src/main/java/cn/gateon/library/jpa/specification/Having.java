@@ -7,5 +7,5 @@ package cn.gateon.library.jpa.specification;
  * @author qiuyuan
  * @since 1.2
  */
-public interface Having<F> extends PredicateBuilder<F>{
+public interface Having extends PredicateBuilder{
 }

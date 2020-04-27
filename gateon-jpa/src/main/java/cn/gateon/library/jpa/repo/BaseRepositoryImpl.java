@@ -1,39 +1,21 @@
 package cn.gateon.library.jpa.repo;
 
-import cn.gateon.library.common.data.Page;
-import cn.gateon.library.common.data.PageRequest;
-import cn.gateon.library.jpa.core.*;
-import cn.gateon.library.jpa.core.query.*;
-import com.querydsl.core.NonUniqueResultException;
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.AbstractJPAQuery;
+import cn.gateon.library.jpa.searcher.MultiSumSearcher;
+import cn.gateon.library.jpa.searcher.Searcher;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.jpa.repository.query.JpaEntityGraph;
 import org.springframework.data.jpa.repository.support.CrudMethodMetadata;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
-import org.springframework.data.jpa.repository.support.Querydsl;
-import org.springframework.data.jpa.repository.support.QuerydslJpaRepository;
-import org.springframework.data.querydsl.EntityPathResolver;
-import org.springframework.data.querydsl.QSort;
-import org.springframework.data.querydsl.SimpleEntityPathResolver;
-import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author qiuyuan
@@ -47,135 +29,32 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
 
     private static final String ID_MUST_NOT_BE_NULL = "id 不可为空";
 
-    private static final EntityPathResolver DEFAULT_ENTITY_PATH_RESOLVER = SimpleEntityPathResolver.INSTANCE;
-
     private final JpaEntityInformation<T, ?> entityInformation;
 
-    private EntityManager entityManager;
-
-    private @Nullable
-    CrudMethodMetadata metadata;
-
-    private final EntityPath<T> path;
-
-    private final PathBuilder<T> builder;
-
-    private final Querydsl querydsl;
+    private final EntityManager entityManager;
 
     public BaseRepositoryImpl(JpaEntityInformation<T, ID> entityInformation, EntityManager entityManager) {
-        this(entityInformation, entityManager, DEFAULT_ENTITY_PATH_RESOLVER);
-    }
-
-    /**
-     * Creates a new {@link QuerydslJpaRepository} from the given domain class and {@link EntityManager} and uses the
-     * given {@link EntityPathResolver} to translate the domain class into an {@link EntityPath}.
-     *
-     * @param entityInformation must not be {@literal null}.
-     * @param entityManager     must not be {@literal null}.
-     * @param resolver          must not be {@literal null}.
-     */
-    public BaseRepositoryImpl(JpaEntityInformation<T, ID> entityInformation, EntityManager entityManager,
-                              EntityPathResolver resolver) {
-        this.entityInformation = entityInformation;
-        this.path = resolver.createPath(entityInformation.getJavaType());
-        this.builder = new PathBuilder<T>(path.getType(), path.getMetadata());
-        this.querydsl = new Querydsl(entityManager, builder);
         this.entityManager = entityManager;
+        this.entityInformation = entityInformation;
     }
 
-    /**
-     * Configures a custom {@link CrudMethodMetadata} to be used to detect {@link LockModeType}s and query hints to be
-     * applied to queries.
-     *
-     * @param crudMethodMetadata
-     */
-    public void setRepositoryMethodMetadata(CrudMethodMetadata crudMethodMetadata) {
-        this.metadata = crudMethodMetadata;
-    }
-
-    @Override
-    public Queryer<T, T> queryer() {
-        return new DefaultQuery<>(entityManager, entityInformation.getJavaType(), entityInformation.getJavaType());
-    }
-
-    @Override
-    public <S> Queryer<T, S> queryer(Class<S> resultClass) {
-        return new DefaultQuery<>(entityManager, entityInformation.getJavaType(), resultClass);
-    }
-
-    @Override
-    public <R> SumQueryer<T, R> multiSum(Class<R> clazz) {
-        return new MultiSumQuery<>(entityManager, entityInformation.getJavaType(), clazz);
-    }
-
-    @Override
-    public SingleSumQueryer<T> singleSum() {
-        return new SingleSumQuery<>(entityManager, entityInformation.getJavaType());
-    }
-
-    @Override
-    public CountQueryer<T> counter() {
-        return new CountQuery<>(entityManager, entityInformation.getJavaType());
-    }
-
-    @Override
-    public ExistsQueryer<T> exister() {
-        return new ExistsQuery<>(entityManager, entityInformation.getJavaType());
-    }
 
     @Override
     public <R> R query(String sql, Class<R> r) {
         return entityManager.createQuery(sql, r).getSingleResult();
     }
 
+
     @Override
-    public Optional<T> findOne(Predicate predicate) {
-        try {
-            return Optional.ofNullable(createQuery(predicate).select(path).fetchOne());
-        } catch (NonUniqueResultException ex) {
-            throw new IncorrectResultSizeDataAccessException(ex.getMessage(), 1, ex);
-        }
+    public Searcher<T> searcher() {
+        return new DefaultSearcherImpl<>(entityManager, entityManager.getCriteriaBuilder(), entityInformation.getJavaType());
     }
 
     @Override
-    public List<T> findAll(Predicate predicate) {
-        return createQuery(predicate).select(path).fetch();
+    public <R> MultiSumSearcher<R> multiSum(Class<R> resultClass) {
+        return new MultiSumSearcherImpl<>(entityManager, entityManager.getCriteriaBuilder(), entityInformation.getJavaType(), resultClass);
     }
 
-
-    @Override
-    public List<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
-        return executeSorted(createQuery(predicate).select(path), orders);
-    }
-
-
-    @Override
-    public long count(Predicate predicate) {
-        return createQuery(predicate).fetchCount();
-    }
-
-    @Override
-    public boolean exists(Predicate predicate) {
-        return createQuery(predicate).fetchCount() > 0;
-    }
-
-    @Override
-    public Page<T> page(Predicate predicate, PageRequest pageRequest) {
-        Assert.notNull(pageRequest, "Pageable must not be null!");
-        final JPQLQuery<?> countQuery = createCountQuery(predicate);
-        JPQLQuery<T> jpqlQuery = createQuery(predicate).select(path);
-        jpqlQuery.offset(pageRequest.getPage() * pageRequest.getSize());
-        jpqlQuery.limit(pageRequest.getSize());
-        List<T> fetch = jpqlQuery.fetch();
-        return new Page<T>(fetch, pageRequest, countQuery.fetchCount());
-    }
-
-    @Override
-    public List<T> findAll(OrderSpecifier<?>... orders) {
-        Assert.notNull(orders, "Order specifiers must not be null!");
-
-        return executeSorted(createQuery(new Predicate[0]).select(path), orders);
-    }
 
     @Override
     @Transactional
@@ -201,14 +80,12 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
     @Override
     public Optional<T> findById(ID id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        Class<T> domainType = entityInformation.getJavaType();
-        if (metadata == null) {
-            return Optional.ofNullable(entityManager.find(domainType, id));
-        }
-        LockModeType type = metadata.getLockModeType();
-        Map<String, Object> hints = getQueryHints().withFetchGraphs(entityManager).asMap();
-        return Optional.ofNullable(type == null ? entityManager.find(domainType, id, hints) : entityManager.find(domainType, id, type, hints));
+        Class<T> domainType = getDomainClass();
+        return Optional.ofNullable(entityManager.find(domainType, id));
+    }
 
+    private Class<T> getDomainClass() {
+        return entityInformation.getJavaType();
     }
 
     @Override
@@ -243,64 +120,5 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
         }
     }
 
-
-    /**
-     * Creates a new {@link JPQLQuery} for the given {@link Predicate}.
-     *
-     * @param predicate
-     * @return the Querydsl {@link JPQLQuery}.
-     */
-    protected JPQLQuery<?> createQuery(Predicate... predicate) {
-        AbstractJPAQuery<?, ?> query = doCreateQuery(getQueryHints().withFetchGraphs(entityManager), predicate);
-        CrudMethodMetadata metadata = getRepositoryMethodMetadata();
-        if (metadata == null) {
-            return query;
-        }
-        LockModeType type = metadata.getLockModeType();
-        return type == null ? query : query.setLockMode(type);
-    }
-
-
-    private QueryHints getQueryHints() {
-        return metadata == null ? QueryHints.NoHints.INSTANCE :
-                DefaultQueryHints.of(entityInformation, metadata);
-    }
-
-    protected JPQLQuery<?> createCountQuery(@Nullable Predicate... predicate) {
-        return doCreateQuery(getQueryHints(), predicate);
-    }
-
-    private AbstractJPAQuery<?, ?> doCreateQuery(QueryHints hints, @Nullable Predicate... predicate) {
-        AbstractJPAQuery<?, ?> query = querydsl.createQuery(path);
-        if (predicate != null) {
-            query = query.where(predicate);
-        }
-
-        for (Map.Entry<String, Object> hint : hints) {
-            query.setHint(hint.getKey(), hint.getValue());
-        }
-        return query;
-    }
-
-
-    private JpaEntityGraph getEntityGraph(EntityGraph entityGraph) {
-        String fallbackName = entityInformation.getEntityName() + "." + metadata.getMethod().getName();
-        return new JpaEntityGraph(entityGraph, fallbackName);
-    }
-
-    @Nullable
-    protected CrudMethodMetadata getRepositoryMethodMetadata() {
-        return metadata;
-    }
-
-
-    private List<T> executeSorted(JPQLQuery<T> query, OrderSpecifier<?>... orders) {
-        return executeSorted(query, new QSort(orders));
-    }
-
-
-    private List<T> executeSorted(JPQLQuery<T> query, Sort sort) {
-        return querydsl.applySorting(sort, query).fetch();
-    }
 
 }
