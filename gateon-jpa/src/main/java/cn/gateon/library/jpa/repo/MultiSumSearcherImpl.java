@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * @author qiuyuan
  * @since 2.0
  */
-public class MultiSumSearcherImpl<R> extends AbstractSearcherImpl<R> implements MultiSumSearcher<R> {
+class MultiSumSearcherImpl<R> extends AbstractSearcherImpl<R> implements MultiSumSearcher<R> {
 
     private final EntityManager entityManager;
 

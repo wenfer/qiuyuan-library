@@ -1,8 +1,5 @@
 package cn.gateon.library.jpa.specification;
 
-import cn.gateon.library.jpa.enums.OperatorEnum;
-import cn.gateon.library.jpa.specification.impl.WhereImpl;
-
 import javax.persistence.criteria.Subquery;
 import java.util.Collection;
 import java.util.Date;
@@ -18,13 +15,16 @@ import java.util.Date;
  */
 public interface Where extends PredicateBuilder {
 
-    default OperatorEnum operator() {
-        return OperatorEnum.AND;
+    OperatorEnum operator();
+
+    static Where and() {
+        return new WhereImpl(OperatorEnum.AND);
     }
 
-    default Where and() {
-        return new WhereImpl();
+    static Where or() {
+        return new WhereImpl(OperatorEnum.OR);
     }
+
 
     /**
      * sql:   =

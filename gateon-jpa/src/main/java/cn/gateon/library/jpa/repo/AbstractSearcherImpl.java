@@ -1,9 +1,9 @@
 package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.common.exception.GateonException;
-import cn.gateon.library.jpa.enums.OperatorEnum;
 import cn.gateon.library.jpa.searcher.Conditional;
 import cn.gateon.library.jpa.specification.CommonBuilder;
+import cn.gateon.library.jpa.specification.OperatorEnum;
 import cn.gateon.library.jpa.specification.Where;
 
 import javax.persistence.criteria.*;
