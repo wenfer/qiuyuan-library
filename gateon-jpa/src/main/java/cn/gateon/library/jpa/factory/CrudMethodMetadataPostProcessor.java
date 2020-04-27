@@ -1,4 +1,4 @@
-package cn.gateon.library.dsl.factory;
+package cn.gateon.library.jpa.factory;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -67,7 +67,7 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
      */
     @Override
     public void postProcess(ProxyFactory factory, RepositoryInformation repositoryInformation) {
-        factory.addAdvice(CrudMethodMetadataPostProcessor.CrudMethodMetadataPopulatingMethodInterceptor.INSTANCE);
+        factory.addAdvice(CrudMethodMetadataPopulatingMethodInterceptor.INSTANCE);
     }
 
     /**
@@ -79,18 +79,18 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
         ProxyFactory factory = new ProxyFactory();
 
         factory.addInterface(CrudMethodMetadata.class);
-        factory.setTargetSource(new CrudMethodMetadataPostProcessor.ThreadBoundTargetSource());
+        factory.setTargetSource(new ThreadBoundTargetSource());
 
         return (CrudMethodMetadata) factory.getProxy(this.classLoader);
     }
 
     /**
-     * {@link MethodInterceptor} to build and cache {@link CrudMethodMetadataPostProcessor.DefaultCrudMethodMetadata} instances for the invoked methods.
+     * {@link MethodInterceptor} to build and cache {@link DefaultCrudMethodMetadata} instances for the invoked methods.
      * Will bind the found information to a {@link TransactionSynchronizationManager} for later lookup.
      *
      * @author Oliver Gierke
      * @author Thomas Darimont
-     * @see CrudMethodMetadataPostProcessor.DefaultCrudMethodMetadata
+     * @see DefaultCrudMethodMetadata
      */
     enum CrudMethodMetadataPopulatingMethodInterceptor implements MethodInterceptor {
 
@@ -115,7 +115,7 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
 
             if (methodMetadata == null) {
 
-                methodMetadata = new CrudMethodMetadataPostProcessor.DefaultCrudMethodMetadata(method);
+                methodMetadata = new DefaultCrudMethodMetadata(method);
                 CrudMethodMetadata tmp = metadataCache.putIfAbsent(method, methodMetadata);
 
                 if (tmp != null) {
@@ -148,7 +148,7 @@ class CrudMethodMetadataPostProcessor implements RepositoryProxyPostProcessor, B
         private final Method method;
 
         /**
-         * Creates a new {@link CrudMethodMetadataPostProcessor.DefaultCrudMethodMetadata} for the given {@link Method}.
+         * Creates a new {@link DefaultCrudMethodMetadata} for the given {@link Method}.
          *
          * @param method must not be {@literal null}.
          */

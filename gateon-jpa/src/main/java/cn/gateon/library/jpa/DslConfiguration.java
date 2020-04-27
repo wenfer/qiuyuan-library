@@ -1,4 +1,4 @@
-package cn.gateon.library.dsl;
+package cn.gateon.library.jpa;
 
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;

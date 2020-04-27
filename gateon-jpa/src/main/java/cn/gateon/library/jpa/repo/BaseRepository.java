@@ -1,7 +1,11 @@
 package cn.gateon.library.jpa.repo;
 
+import cn.gateon.library.common.data.Page;
+import cn.gateon.library.common.data.PageRequest;
 import cn.gateon.library.jpa.searcher.MultiSumSearcher;
 import cn.gateon.library.jpa.searcher.Searcher;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
@@ -38,6 +42,20 @@ public interface BaseRepository<T, ID extends Serializable> extends Repository<T
     void delete(T t);
 
     void deleteById(ID id);
+
+    long count(Predicate predicate);
+
+    boolean exists(Predicate predicate);
+
+    Page<T> page(Predicate predicate, PageRequest pageRequest);
+
+    List<T> findAll(OrderSpecifier<?>... orders);
+
+    List<T> findAll(Predicate predicate, OrderSpecifier<?>... orders);
+
+    List<T> findAll(Predicate predicate);
+
+    Optional<T> findOne(Predicate predicate);
 
 
 }
