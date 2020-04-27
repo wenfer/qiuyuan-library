@@ -9,22 +9,23 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>gateon-jpa</artifactId>
+    <artifactId>gateon-dsl</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>cn.gateon.library</groupId>
-            <artifactId>gateon-common</artifactId>
+            <artifactId>gateon-jpa</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
         </dependency>
     </dependencies>
+
 </project>

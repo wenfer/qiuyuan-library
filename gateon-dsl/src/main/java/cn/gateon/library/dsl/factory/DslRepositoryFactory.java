@@ -1,6 +1,6 @@
-package cn.gateon.library.jpa.factory;
+package cn.gateon.library.dsl.factory;
 
-import cn.gateon.library.jpa.repo.BaseRepositoryImpl;
+import cn.gateon.library.dsl.repo.DslRepositoryImpl;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.data.jpa.projection.CollectionAwareProjectionFactory;
 import org.springframework.data.jpa.provider.PersistenceProvider;
@@ -27,23 +27,27 @@ import java.util.Optional;
  *
  * @author qiuyuan
  * @see JpaRepositoryFactory  抄的这个类
- * @since 1.4
+ * @since 2.0
  */
-public class BaseRepositoryFactory extends RepositoryFactorySupport {
+public class DslRepositoryFactory extends RepositoryFactorySupport {
 
     private final EntityManager entityManager;
 
     private final QueryExtractor extractor;
+
+    private final CrudMethodMetadataPostProcessor crudMethodMetadataPostProcessor;
 
     /**
      * Creates a new {@link JpaRepositoryFactory}.
      *
      * @param entityManager must not be {@literal null}
      */
-    public BaseRepositoryFactory(EntityManager entityManager) {
+    public DslRepositoryFactory(EntityManager entityManager) {
         Assert.notNull(entityManager, "EntityManager must not be null!");
         this.entityManager = entityManager;
         this.extractor = PersistenceProvider.fromEntityManager(entityManager);
+        this.crudMethodMetadataPostProcessor = new CrudMethodMetadataPostProcessor();
+        addRepositoryProxyPostProcessor(crudMethodMetadataPostProcessor);
     }
 
     @Override
@@ -55,7 +59,9 @@ public class BaseRepositoryFactory extends RepositoryFactorySupport {
     @Override
     protected Object getTargetRepository(RepositoryInformation information) {
         JpaEntityInformation<?, ?> entityInformation = getEntityInformation(information.getDomainType());
-        return getTargetRepositoryViaReflection(information, entityInformation, entityManager);
+        DslRepositoryImpl<?, ?> repository = getTargetRepositoryViaReflection(information, entityInformation, entityManager);
+        repository.setRepositoryMethodMetadata(crudMethodMetadataPostProcessor.getCrudMethodMetadata());
+        return repository;
     }
 
     /**
@@ -78,7 +84,7 @@ public class BaseRepositoryFactory extends RepositoryFactorySupport {
 
     @Override
     protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
-        return BaseRepositoryImpl.class;
+        return DslRepositoryImpl.class;
     }
 
 

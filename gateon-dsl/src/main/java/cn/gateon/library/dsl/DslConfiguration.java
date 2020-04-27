@@ -1,4 +1,4 @@
-package cn.gateon.library.jpa;
+package cn.gateon.library.dsl;
 
 import com.querydsl.jpa.JPQLTemplates;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,10 +12,10 @@ import javax.persistence.EntityManager;
  * </p>
  *
  * @author qiuyuan
- * @since 1.4
+ * @since 2.0
  */
 @Configuration
-public class BaseJpaConfiguration {
+public class DslConfiguration {
 
     @Bean
     public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {

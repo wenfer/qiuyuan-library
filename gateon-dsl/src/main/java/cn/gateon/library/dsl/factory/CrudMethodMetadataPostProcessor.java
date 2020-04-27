@@ -1,4 +1,4 @@
-package cn.gateon.library.jpa.factory;
+package cn.gateon.library.dsl.factory;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -34,7 +34,7 @@ import java.util.concurrent.ConcurrentMap;
  * </p>
  *
  * @author qiuyuan
- * @since 1.4
+ * @since 2.0
  */
 
 /**
