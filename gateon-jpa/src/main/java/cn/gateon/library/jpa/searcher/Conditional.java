@@ -1,6 +1,6 @@
 package cn.gateon.library.jpa.searcher;
 
-import cn.gateon.library.jpa.repo.Where;
+import cn.gateon.library.jpa.specification.Where;
 
 /**
  * <p>

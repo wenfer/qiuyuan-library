@@ -1,4 +1,4 @@
-package cn.gateon.library.jpa.repo;
+package cn.gateon.library.jpa.specification;
 
 import java.util.Map;
 

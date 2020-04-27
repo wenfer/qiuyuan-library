@@ -1,7 +1,10 @@
 package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.common.exception.GateonException;
+import cn.gateon.library.jpa.enums.OperatorEnum;
 import cn.gateon.library.jpa.searcher.Conditional;
+import cn.gateon.library.jpa.specification.CommonBuilder;
+import cn.gateon.library.jpa.specification.Where;
 
 import javax.persistence.criteria.*;
 import java.util.List;
@@ -14,7 +17,7 @@ import java.util.Map;
  * @author qiuyuan
  * @since 2.0
  */
-abstract class AbstractSearcherImpl<R> implements Conditional {
+public abstract class AbstractSearcherImpl<R> implements Conditional {
 
     CriteriaBuilder cb;
 
