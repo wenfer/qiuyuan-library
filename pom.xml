@@ -17,6 +17,7 @@
         <module>gateon-json</module>
         <module>gateon-mvc</module>
         <module>gateon-repeat-submit</module>
+        <module>gateon-dsl</module>
     </modules>
     <properties>
         <mbg-version>1.0-SNAPSHOT</mbg-version>
