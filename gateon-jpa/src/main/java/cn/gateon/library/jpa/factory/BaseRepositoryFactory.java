@@ -1,11 +1,11 @@
 package cn.gateon.library.jpa.factory;
 
-import cn.gateon.library.jpa.repo.BaseRepository;
 import cn.gateon.library.jpa.repo.BaseRepositoryImpl;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.data.jpa.projection.CollectionAwareProjectionFactory;
 import org.springframework.data.jpa.provider.PersistenceProvider;
 import org.springframework.data.jpa.provider.QueryExtractor;
+import org.springframework.data.jpa.repository.query.EscapeCharacter;
 import org.springframework.data.jpa.repository.query.JpaQueryLookupStrategy;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
@@ -14,8 +14,8 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
-import org.springframework.data.repository.query.EvaluationContextProvider;
 import org.springframework.data.repository.query.QueryLookupStrategy;
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
@@ -31,6 +31,8 @@ import java.util.Optional;
  * @since 1.4
  */
 public class BaseRepositoryFactory extends RepositoryFactorySupport {
+
+    private EscapeCharacter escapeCharacter = EscapeCharacter.DEFAULT;
 
     private final EntityManager entityManager;
 
@@ -70,8 +72,9 @@ public class BaseRepositoryFactory extends RepositoryFactorySupport {
      */
     @Override
     protected Optional<QueryLookupStrategy> getQueryLookupStrategy(@Nullable QueryLookupStrategy.Key key,
-                                                                   EvaluationContextProvider evaluationContextProvider) {
-        return Optional.of(JpaQueryLookupStrategy.create(entityManager, key, extractor, evaluationContextProvider));
+                                                                   QueryMethodEvaluationContextProvider evaluationContextProvider) {
+        return Optional
+                .of(JpaQueryLookupStrategy.create(entityManager, key, extractor, evaluationContextProvider, escapeCharacter));
     }
 
     @Override
