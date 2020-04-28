@@ -19,7 +19,9 @@
         <module>gateon-amqp</module>
     </modules>
     <properties>
-        <mbg-version>1.0-SNAPSHOT</mbg-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
         <hutool.version>5.2.5</hutool.version>
     </properties>
 
@@ -71,5 +73,18 @@
             <url>https://repo.rdc.aliyun.com/repository/103513-snapshot-WoY8UX/</url>
         </snapshotRepository>
     </distributionManagement>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
