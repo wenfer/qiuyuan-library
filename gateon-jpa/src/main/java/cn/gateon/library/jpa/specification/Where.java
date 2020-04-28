@@ -29,64 +29,64 @@ public interface Where extends PredicateBuilder {
     /**
      * sql:   =
      */
-    PredicateBuilder eq(String property, Object value);
+    Where eq(String property, Object value);
 
     /**
      * sql:   !=
      */
-    PredicateBuilder neq(String property, Object value);
+    Where neq(String property, Object value);
 
     /**
      * sql:   in()
      */
-    PredicateBuilder in(String property, Collection<?> value);
+    Where in(String property, Collection<?> value);
 
     /**
      * sql:   not in()
      */
-    PredicateBuilder nin(String property, Collection<?> value);
+    Where nin(String property, Collection<?> value);
 
     /**
      * sql:   >=
      */
-    PredicateBuilder gte(String property, Number value);
+    Where gte(String property, Number value);
 
     /**
      * sql:   >
      */
-    PredicateBuilder gt(String property, Number value);
+    Where gt(String property, Number value);
 
     /**
      * sql:   find_in_set()
      */
-    PredicateBuilder findInSet(String property, String value);
+    Where findInSet(String property, String value);
 
     /**
      * sql:   <=
      */
-    PredicateBuilder lte(String property, Number value);
+    Where lte(String property, Number value);
 
     /**
      * sql:   <
      */
-    PredicateBuilder lt(String property, Number value);
+    Where lt(String property, Number value);
 
     /**
      * type:  date or time
      * sql:   >=
      */
-    PredicateBuilder start(String property, Date start);
+    Where start(String property, Date start);
 
     /**
      * type:  date or time
      * sql:   <=
      */
-    PredicateBuilder end(String property, Date end);
+    Where end(String property, Date end);
 
     /**
      * sql:  (isNull?'':'not')  is null
      */
-    PredicateBuilder isNull(String property, boolean isNull);
+    Where isNull(String property, boolean isNull);
 
     /**
      * <code>
@@ -96,11 +96,11 @@ public interface Where extends PredicateBuilder {
      * baseQueryer.where().any("id",subquery.build());
      * </code>
      */
-    <S> PredicateBuilder any(String property, Subquery<S> subQuery);
+    <S> Where any(String property, Subquery<S> subQuery);
 
     /**
      * @param position -1 左模糊   0 全模糊  1 右模糊
      */
-    PredicateBuilder like(String property, String value, int position);
+    Where like(String property, String value, int position);
 
 }
