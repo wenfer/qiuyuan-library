@@ -6,7 +6,6 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.AbstractMessageConverter;
 import org.springframework.amqp.support.converter.MessageConversionException;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
@@ -17,7 +16,6 @@ import org.springframework.util.StringUtils;
  * @since 2.0
  */
 @Slf4j
-@Component
 public class GateonConverter extends AbstractMessageConverter {
 
     @Override

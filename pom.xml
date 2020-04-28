@@ -14,7 +14,6 @@
         <module>gateon-library-dependencies</module>
         <module>gateon-redis</module>
         <module>gateon-feign</module>
-        <module>gateon-json</module>
         <module>gateon-mvc</module>
         <module>gateon-repeat-submit</module>
         <module>gateon-amqp</module>
