@@ -138,7 +138,7 @@ class WhereImpl implements Where {
     }
 
     @Override
-    public <S> PredicateBuilder any(String property, Subquery<S> subQuery) {
+    public <S> Where any(String property, Subquery<S> subQuery) {
         builders.put(property, (cb, expression) -> cb.equal(expression, cb.any(subQuery)));
         return this;
     }

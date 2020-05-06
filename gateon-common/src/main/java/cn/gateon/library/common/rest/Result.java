@@ -3,6 +3,8 @@ package cn.gateon.library.common.rest;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * </p>
@@ -12,7 +14,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class Result<T> {
+public class Result<T> implements Serializable {
 
     public static Result SUCCESS = new Result(0, "操作成功");
 
