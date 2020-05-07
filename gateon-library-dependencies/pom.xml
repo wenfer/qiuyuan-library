@@ -48,6 +48,12 @@
                 <artifactId>gateon-mvc</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cn.gateon.library</groupId>
+                <artifactId>gateon-amqp</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
