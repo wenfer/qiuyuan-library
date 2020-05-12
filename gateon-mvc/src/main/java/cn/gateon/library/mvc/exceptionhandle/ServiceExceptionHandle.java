@@ -51,12 +51,6 @@ public class ServiceExceptionHandle {
         return ResponseEntity.ok().body(Result.fail(ex.getLocalizedMessage()));
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> runtime(RuntimeException ex) {
-        log.error("运行时异常:", ex);
-        return ResponseEntity.ok().body(Result.fail(ex.getMessage()));
-    }
-
     @ExceptionHandler(LoginException.class)
     public ResponseEntity<?> loginException(LoginException ex) {
         log.error("认证失败:", ex);
