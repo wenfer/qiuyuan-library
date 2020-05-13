@@ -88,7 +88,7 @@ class DefaultSearcherImpl<R> extends AbstractSearcherImpl<R> implements Searcher
     protected void joinQuery(CriteriaQuery<?> criteriaQuery) {
         Root<?> from = criteriaQuery.from(root.getJavaType());
         if (!CollectionUtils.isEmpty(root.getJoins())) {
-            query.distinct(true);
+            criteriaQuery.distinct(true);
             for (Join<?, ?> join : root.getJoins()) {
                 from.join(join.getAttribute().getName(), join.getJoinType());
             }

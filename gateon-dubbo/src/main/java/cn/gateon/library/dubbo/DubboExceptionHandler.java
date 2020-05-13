@@ -22,7 +22,7 @@ public class DubboExceptionHandler {
     @ExceptionHandler({RpcException.class})
     public ResponseEntity<?> entity(RpcException ex) {
         log.error("服务调用异常:", ex);
-        return ResponseEntity.ok().body(Result.fail(-1, "服务异常，请检查服务状态"));
+        return ResponseEntity.ok().body(Result.fail(-1, "服务异常，请联系相关人员"));
     }
 
     @ExceptionHandler({DubboException.class})
