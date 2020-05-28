@@ -2,6 +2,7 @@ package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.common.data.Page;
 import cn.gateon.library.common.data.PageRequest;
+import cn.gateon.library.jpa.searcher.DslBuilder;
 import cn.gateon.library.jpa.searcher.MultiSumSearcher;
 import cn.gateon.library.jpa.searcher.Searcher;
 import com.querydsl.core.NonUniqueResultException;
@@ -102,7 +103,6 @@ public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepos
     public List<T> findAll(Predicate predicate) {
         return createQuery(predicate).select(path).fetch();
     }
-
 
     @Override
     public List<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {

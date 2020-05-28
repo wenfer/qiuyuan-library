@@ -13,4 +13,8 @@ public interface PredicateBuilder {
 
     Map<String, CommonBuilder> builders();
 
+    String getJoinProperty();
+
+    OperatorEnum operator();
+
 }

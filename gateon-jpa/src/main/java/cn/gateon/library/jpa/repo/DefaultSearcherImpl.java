@@ -2,8 +2,9 @@ package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.common.data.Page;
 import cn.gateon.library.common.data.PageRequest;
-import cn.gateon.library.jpa.searcher.JoinQuery;
 import cn.gateon.library.jpa.searcher.Searcher;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.NonUniqueResultException;
 import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -21,48 +22,67 @@ import java.util.List;
  * @author qiuyuan
  * @since 2.0
  */
+@Slf4j
 class DefaultSearcherImpl<R> extends AbstractSearcherImpl<R> implements Searcher<R> {
 
     private List<Order> orders = new ArrayList<>();
 
+    private Class<R> beanClass;
+
     private final EntityManager entityManager;
 
     DefaultSearcherImpl(EntityManager entityManager, CriteriaBuilder criteriaBuilder, Class<R> beanClass) {
-        super(criteriaBuilder, beanClass, criteriaBuilder.createQuery(beanClass), new ArrayList<>());
+        super(criteriaBuilder);
         this.entityManager = entityManager;
+        this.beanClass = beanClass;
     }
 
     @Override
     public List<R> find() {
-        return createQuery().getResultList();
+        CriteriaQuery<R> query = cb.createQuery(beanClass);
+        Root<R> root = query.from(beanClass);
+        return createQuery(query, root).getResultList();
     }
 
     @Override
     public R findOne() {
-        return createQuery().getSingleResult();
+        CriteriaQuery<R> query = cb.createQuery(beanClass);
+        Root<R> root = query.from(beanClass);
+        List<R> resultList = createQuery(query, root).getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        if (resultList.size() > 1) {
+            log.error("此条数据不唯一,请及时处理");
+            throw new NonUniqueResultException(resultList.size());
+        }
+        return resultList.get(0);
     }
 
     @Override
     public long count() {
         CriteriaQuery<Long> count = cb.createQuery(Long.class);
+        Root<?> root = count.from(beanClass);
         count.select(cb.count(root));
-        if (!CollectionUtils.isEmpty(this.predicates)) {
-            joinQuery(count);
-            Predicate[] predicateArray = new Predicate[this.predicates.size()];
-            count.where(this.predicates.toArray(predicateArray));
+        List<Predicate> predicates = buildPredicate(root);
+        if (!CollectionUtils.isEmpty(predicates)) {
+            Predicate[] predicateArray = new Predicate[predicates.size()];
+            count.where(predicates.toArray(predicateArray));
         }
         TypedQuery<Long> countQuery = entityManager.createQuery(count);
         return countQuery.getSingleResult();
     }
 
+
     @Override
     public boolean exists() {
         CriteriaQuery<Boolean> exists = cb.createQuery(Boolean.class);
+        Root<R> root = exists.from(beanClass);
         exists.select(cb.gt(cb.count(root), 0));
-        if (!CollectionUtils.isEmpty(this.predicates)) {
-            joinQuery(exists);
-            Predicate[] predicateArray = new Predicate[this.predicates.size()];
-            exists.where(this.predicates.toArray(predicateArray));
+        List<Predicate> predicates = buildPredicate(root);
+        if (!CollectionUtils.isEmpty(predicates)) {
+            Predicate[] predicateArray = new Predicate[predicates.size()];
+            exists.where(predicates.toArray(predicateArray));
         }
         TypedQuery<Boolean> existsQuery = entityManager.createQuery(exists);
         return existsQuery.getSingleResult();
@@ -71,12 +91,14 @@ class DefaultSearcherImpl<R> extends AbstractSearcherImpl<R> implements Searcher
     @Override
     public Page<R> page(PageRequest pageRequest) {
         String sort = pageRequest.getSort();
+        CriteriaQuery<R> query = cb.createQuery(beanClass);
+        Root<R> root = query.from(beanClass);
         if (!StringUtils.isEmpty(sort)) {
             orders.add(new OrderImpl(root.get(sort), pageRequest.getAsc()));
         }
-        TypedQuery<R> typedQuery = createQuery();
+        TypedQuery<R> typedQuery = createQuery(query, root);
         if (!CollectionUtils.isEmpty(orders)) {
-            this.query.orderBy(orders);
+            query.orderBy(orders);
         }
         typedQuery.setMaxResults(pageRequest.getSize());
         typedQuery.setFirstResult(pageRequest.getPage() * pageRequest.getSize());
@@ -85,21 +107,11 @@ class DefaultSearcherImpl<R> extends AbstractSearcherImpl<R> implements Searcher
     }
 
 
-    protected void joinQuery(CriteriaQuery<?> criteriaQuery) {
-        Root<?> from = criteriaQuery.from(root.getJavaType());
-        if (!CollectionUtils.isEmpty(root.getJoins())) {
-            criteriaQuery.distinct(true);
-            for (Join<?, ?> join : root.getJoins()) {
-                from.join(join.getAttribute().getName(), join.getJoinType());
-            }
-        }
-    }
-
-
-    private TypedQuery<R> createQuery() {
-        if (!CollectionUtils.isEmpty(this.predicates)) {
-            Predicate[] predicateArray = new Predicate[this.predicates.size()];
-            query.where(this.predicates.toArray(predicateArray));
+    private TypedQuery<R> createQuery(CriteriaQuery<R> query, From<?, ?> root) {
+        List<Predicate> predicates = buildPredicate(root);
+        if (!CollectionUtils.isEmpty(predicates)) {
+            Predicate[] predicateArray = new Predicate[predicates.size()];
+            query.where(predicates.toArray(predicateArray));
         }
         if (!CollectionUtils.isEmpty(orders)) {
             query.orderBy(orders);
@@ -107,9 +119,5 @@ class DefaultSearcherImpl<R> extends AbstractSearcherImpl<R> implements Searcher
         return entityManager.createQuery(query);
     }
 
-    @Override
-    public JoinQuery join(String field) {
-        Join<?, ?> join = root.join(field);
-        return new JoinQueryImpl<>(cb, join, predicates);
-    }
+
 }

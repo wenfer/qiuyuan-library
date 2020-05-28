@@ -15,14 +15,20 @@ import java.util.Date;
  */
 public interface Where extends PredicateBuilder {
 
-    OperatorEnum operator();
-
     static Where and() {
         return new WhereImpl(OperatorEnum.AND);
     }
 
     static Where or() {
         return new WhereImpl(OperatorEnum.OR);
+    }
+
+    static Where join(String property) {
+        return join(property, OperatorEnum.AND);
+    }
+
+    static Where join(String property, OperatorEnum operatorEnum){
+        return new WhereImpl(operatorEnum,property);
     }
 
 

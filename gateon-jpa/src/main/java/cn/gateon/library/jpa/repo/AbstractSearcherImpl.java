@@ -2,11 +2,12 @@ package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.common.exception.GateonException;
 import cn.gateon.library.jpa.searcher.Conditional;
-import cn.gateon.library.jpa.specification.CommonBuilder;
-import cn.gateon.library.jpa.specification.OperatorEnum;
-import cn.gateon.library.jpa.specification.Where;
+import cn.gateon.library.jpa.specification.*;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,32 +22,81 @@ public abstract class AbstractSearcherImpl<R> implements Conditional {
 
     CriteriaBuilder cb;
 
-    protected From<?, ?> root;
+    private LinkedList<PredicateBuilder> wheres = new LinkedList<>();
 
-    CriteriaQuery<R> query;
-
-    protected List<Predicate> predicates;
-
-    AbstractSearcherImpl(CriteriaBuilder cb, Class<?> from, CriteriaQuery<R> query, List<Predicate> predicates) {
+    AbstractSearcherImpl(CriteriaBuilder cb) {
         this.cb = cb;
-        this.query = query;
-        this.root = query.from(from);
-        this.predicates = predicates;
     }
 
-    AbstractSearcherImpl(CriteriaBuilder cb, From<?, ?> root, List<Predicate> predicates) {
-        this.cb = cb;
-        this.root = root;
-        this.predicates = predicates;
+
+    @Override
+    public Where and() {
+        Where and = Where.and();
+        wheres.add(and);
+        return and;
     }
 
     @Override
-    public void where(Where where) {
+    public Where join(String property) {
+        Where join = Where.join(property);
+        wheres.add(join);
+        return join;
+    }
+
+    @Override
+    public JoinCollectionWhere joinCollection(String property) {
+        JoinCollectionWhereImpl joinCollectionWhere = new JoinCollectionWhereImpl(property);
+        wheres.add(joinCollectionWhere);
+        return joinCollectionWhere;
+    }
+
+
+    @Override
+    public Where or() {
+        Where or = Where.or();
+        wheres.add(or);
+        return or;
+    }
+
+    @Override
+    public void where(PredicateBuilder where) {
+        this.wheres.add(where);
+    }
+
+    @Override
+    public boolean clear() {
+        try {
+            this.wheres.clear();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public List<Predicate> buildPredicate(From<?, ?> root) {
+        List<Predicate> predicates = new ArrayList<>();
+        for (PredicateBuilder where : wheres) {
+            if (!StringUtils.isEmpty(where.getJoinProperty())) {
+                Join<?, ?> join = root.join(where.getJoinProperty());
+                buildSingleWhere(where, join, predicates);
+            } else {
+                buildSingleWhere(where, root, predicates);
+            }
+        }
+        return predicates;
+    }
+
+    private void buildSingleWhere(PredicateBuilder where, From<?, ?> root, List<Predicate> predicates) {
         Map<String, CommonBuilder> builders = where.builders();
         Predicate[] predicateArray = new Predicate[builders.size()];
         int i = 0;
         for (Map.Entry<String, CommonBuilder> entry : builders.entrySet()) {
-            Path<Object> objectPath = root.get(entry.getKey());
+            Path<?> objectPath;
+            if (where instanceof JoinCollectionWhere) {
+                objectPath = root;
+            } else {
+                objectPath = root.get(entry.getKey());
+            }
             if (objectPath == null) {
                 throw new GateonException("不存在的字段:" + entry.getKey() + "，请检查是否拼错");
             }
@@ -54,11 +104,10 @@ public abstract class AbstractSearcherImpl<R> implements Conditional {
             i++;
         }
         if (OperatorEnum.AND.equals(where.operator())) {
-            this.predicates.add(cb.and(predicateArray));
+            predicates.add(cb.and(predicateArray));
         } else if (OperatorEnum.OR.equals(where.operator())) {
-            this.predicates.add(cb.or(predicateArray));
+            predicates.add(cb.or(predicateArray));
         }
     }
-
 
 }

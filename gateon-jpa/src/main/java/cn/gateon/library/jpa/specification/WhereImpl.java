@@ -19,6 +19,8 @@ import java.util.Map;
  */
 class WhereImpl implements Where {
 
+    private String joinProperty;
+
     private OperatorEnum operator;
 
     protected Map<String, CommonBuilder> builders = new HashMap<>();
@@ -27,10 +29,16 @@ class WhereImpl implements Where {
         this.operator = operatorEnum;
     }
 
+    public WhereImpl(OperatorEnum operatorEnum,String joinProperty) {
+        this.operator = operatorEnum;
+        this.joinProperty = joinProperty;
+    }
+
     @Override
     public OperatorEnum operator() {
         return operator;
     }
+
 
     @Override
     public Where eq(String property, Object value) {
@@ -164,5 +172,10 @@ class WhereImpl implements Where {
     @Override
     public Map<String, CommonBuilder> builders() {
         return builders;
+    }
+
+    @Override
+    public String getJoinProperty() {
+        return joinProperty;
     }
 }

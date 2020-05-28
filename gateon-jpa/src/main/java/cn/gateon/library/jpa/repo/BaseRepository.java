@@ -2,6 +2,7 @@ package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.common.data.Page;
 import cn.gateon.library.common.data.PageRequest;
+import cn.gateon.library.jpa.searcher.DslBuilder;
 import cn.gateon.library.jpa.searcher.MultiSumSearcher;
 import cn.gateon.library.jpa.searcher.Searcher;
 import com.querydsl.core.types.OrderSpecifier;

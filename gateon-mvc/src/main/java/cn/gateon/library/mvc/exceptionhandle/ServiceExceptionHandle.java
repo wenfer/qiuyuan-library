@@ -53,7 +53,7 @@ public class ServiceExceptionHandle {
 
     @ExceptionHandler(LoginException.class)
     public ResponseEntity<?> loginException(LoginException ex) {
-        log.error("认证失败:", ex);
+        //log.error("认证失败:", ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Result.fail(-5, "权限认证失败"));
     }
 

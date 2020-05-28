@@ -1,5 +1,7 @@
 package cn.gateon.library.jpa.searcher;
 
+import cn.gateon.library.jpa.specification.JoinCollectionWhere;
+import cn.gateon.library.jpa.specification.PredicateBuilder;
 import cn.gateon.library.jpa.specification.Where;
 
 /**
@@ -11,6 +13,16 @@ import cn.gateon.library.jpa.specification.Where;
  */
 public interface Conditional {
 
-    void where(Where where);
+    void where(PredicateBuilder where);
+
+    boolean clear();
+
+    Where and();
+
+    Where join(String property);
+
+    JoinCollectionWhere joinCollection(String property);
+
+    Where or();
 
 }

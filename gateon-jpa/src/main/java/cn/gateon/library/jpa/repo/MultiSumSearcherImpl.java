@@ -5,8 +5,9 @@ import cn.gateon.library.jpa.searcher.MultiSumSearcher;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
-import java.util.ArrayList;
+import javax.persistence.criteria.Root;
 
 /**
  * <p>
@@ -19,9 +20,15 @@ class MultiSumSearcherImpl<R> extends AbstractSearcherImpl<R> implements MultiSu
 
     private final EntityManager entityManager;
 
+    private CriteriaQuery<R> query;
+
+    private Root<?> root;
+
     MultiSumSearcherImpl(EntityManager entityManager, CriteriaBuilder criteriaBuilder, Class<?> from, Class<R> resultClass) {
-        super(criteriaBuilder, from, criteriaBuilder.createQuery(resultClass), new ArrayList<>());
+        super(criteriaBuilder);
         this.entityManager = entityManager;
+        this.query = criteriaBuilder.createQuery(resultClass);
+        this.root = query.from(from);
     }
 
     @Override
