@@ -1,5 +1,6 @@
 package cn.gateon.library.jpa.specification;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,6 +13,8 @@ import java.util.Map;
 public interface PredicateBuilder {
 
     Map<String, CommonBuilder> builders();
+
+    List<Term> terms();
 
     String getJoinProperty();
 

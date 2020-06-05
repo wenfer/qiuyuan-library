@@ -27,7 +27,7 @@ public class DubboExceptionHandler {
 
     @ExceptionHandler({DubboException.class})
     public ResponseEntity<?> dubboException(DubboException ex) {
-        log.error("服务[{}]发生异常:", ex.getServiceId(), ex);
+        log.error("服务[{}]发生异常:", ex.getServiceId());
         return ResponseEntity.ok().body(Result.fail(-1, ex.getLocalizedMessage()));
     }
 }

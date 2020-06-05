@@ -3,9 +3,7 @@ package cn.gateon.library.jpa.specification;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -20,26 +18,31 @@ public class JoinCollectionWhereImpl implements JoinCollectionWhere {
 
     private String joinProperty;
 
-    protected Map<String, CommonBuilder> builders = new LinkedHashMap<>();
+    protected List<Term> terms = new LinkedList<>();
 
     public JoinCollectionWhereImpl(String joinProperty) {
         this.joinProperty = joinProperty;
     }
 
     public JoinCollectionWhereImpl eq(Object value) {
-        builders.put(joinProperty, (cb, expression) -> cb.equal(expression, value));
+        terms.add(new Term(joinProperty, (cb, expression) -> cb.equal(expression, value)));
         return this;
     }
 
     @Override
     public JoinCollectionWhere in(Collection<?> values) {
-        builders.put(joinProperty, (cb, expression) -> expression.in(values));
+        terms.add(new Term(joinProperty, (cb, expression) -> expression.in(values)));
         return this;
     }
 
     @Override
     public Map<String, CommonBuilder> builders() {
-        return builders;
+        return null;
+    }
+
+    @Override
+    public List<Term> terms() {
+        return terms;
     }
 
     @Override

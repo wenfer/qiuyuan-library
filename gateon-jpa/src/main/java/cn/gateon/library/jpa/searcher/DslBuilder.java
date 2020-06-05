@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
+
 /**
  * <p>
  * </p>
@@ -76,7 +78,7 @@ public class DslBuilder<T> {
         return this;
     }
 
-    public <V> DslBuilder<T> gt(String property, V value) {
+    public <V> DslBuilder<T> gt(String property, Comparable<V> value) {
         if (value == null) {
             return this;
         }
@@ -84,7 +86,7 @@ public class DslBuilder<T> {
         return this;
     }
 
-    public <V> DslBuilder<T> gte(String property, V value) {
+    public <V> DslBuilder<T> gte(String property, Comparable<V> value) {
         if (value == null) {
             return this;
         }
@@ -92,7 +94,7 @@ public class DslBuilder<T> {
         return this;
     }
 
-    public <V> DslBuilder<T> lt(String property, V value) {
+    public <V> DslBuilder<T> lt(String property, Comparable<V> value) {
         if (value == null) {
             return this;
         }
@@ -100,11 +102,13 @@ public class DslBuilder<T> {
         return this;
     }
 
-    public <V> DslBuilder<T> lte(String property, V value) {
+    public <V> DslBuilder<T> lte(String property, Comparable<V> value) {
         if (value == null) {
             return this;
         }
         booleanBuilder.and(Expressions.booleanOperation(Ops.LOE, pathBuilder.get(property), ConstantImpl.create(value)));
         return this;
     }
+
+
 }

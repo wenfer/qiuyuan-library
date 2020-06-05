@@ -1,13 +1,12 @@
 package cn.gateon.library.jpa.repo;
 
 import cn.gateon.library.jpa.searcher.MultiSumSearcher;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.List;
 
 /**
  * <p>
@@ -41,6 +40,11 @@ class MultiSumSearcherImpl<R> extends AbstractSearcherImpl<R> implements MultiSu
             ex[i] = cb.coalesce(cb.sumAsLong(root.get(fields[i])), 0L);
         }
         query.multiselect(ex);
+        List<Predicate> predicates = buildPredicate(root);
+        if (!CollectionUtils.isEmpty(predicates)) {
+            Predicate[] predicateArray = new Predicate[predicates.size()];
+            query.where(predicates.toArray(predicateArray));
+        }
         TypedQuery<R> query = entityManager.createQuery(this.query);
         return query.getSingleResult();
     }

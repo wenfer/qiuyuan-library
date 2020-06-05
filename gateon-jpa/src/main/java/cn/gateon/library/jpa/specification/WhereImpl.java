@@ -5,10 +5,7 @@ import org.hibernate.query.criteria.internal.CriteriaBuilderImpl;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.Subquery;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -23,13 +20,15 @@ class WhereImpl implements Where {
 
     private OperatorEnum operator;
 
+    private LinkedList<Term> terms = new LinkedList<>();
+
     protected Map<String, CommonBuilder> builders = new HashMap<>();
 
     public WhereImpl(OperatorEnum operatorEnum) {
         this.operator = operatorEnum;
     }
 
-    public WhereImpl(OperatorEnum operatorEnum,String joinProperty) {
+    public WhereImpl(OperatorEnum operatorEnum, String joinProperty) {
         this.operator = operatorEnum;
         this.joinProperty = joinProperty;
     }
@@ -45,7 +44,7 @@ class WhereImpl implements Where {
         if (value == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.equal(expression, value)));
+        terms.push(new Term(property, ((cb, expression) -> cb.equal(expression, value))));
         return this;
     }
 
@@ -54,7 +53,7 @@ class WhereImpl implements Where {
         if (value == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.notEqual(expression, value)));
+        terms.push(new Term(property, ((cb, expression) -> cb.notEqual(expression, value))));
         return this;
     }
 
@@ -63,7 +62,7 @@ class WhereImpl implements Where {
         if (value == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> expression.in(value)));
+        terms.push(new Term(property, ((cb, expression) -> expression.in(value))));
         return this;
     }
 
@@ -72,7 +71,7 @@ class WhereImpl implements Where {
         if (value == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.not(expression.in(value))));
+        terms.push(new Term(property, ((cb, expression) -> cb.not(expression.in(value)))));
         return this;
     }
 
@@ -81,7 +80,7 @@ class WhereImpl implements Where {
         if (value == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.ge(expression.as(Number.class), value)));
+        terms.push(new Term(property, ((cb, expression) -> cb.ge(expression.as(Number.class), value))));
         return this;
     }
 
@@ -90,7 +89,7 @@ class WhereImpl implements Where {
         if (value == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.gt(expression.as(Number.class), value)));
+        terms.push(new Term(property, ((cb, expression) -> cb.gt(expression.as(Number.class), value))));
         return this;
     }
 
@@ -99,7 +98,7 @@ class WhereImpl implements Where {
         if (StringUtils.isEmpty(value)) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.ge(new FindInSetFunction((CriteriaBuilderImpl) cb, expression.as(String.class), value), 1)));
+        terms.push(new Term(property, ((cb, expression) -> cb.ge(new FindInSetFunction((CriteriaBuilderImpl) cb, expression.as(String.class), value), 1))));
         return this;
     }
 
@@ -108,7 +107,7 @@ class WhereImpl implements Where {
         if (value == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.le(expression.as(Number.class), value)));
+        terms.push(new Term(property, ((cb, expression) -> cb.le(expression.as(Number.class), value))));
         return this;
     }
 
@@ -117,7 +116,7 @@ class WhereImpl implements Where {
         if (value == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.lt(expression.as(Number.class), value)));
+        terms.push(new Term(property, ((cb, expression) -> cb.lt(expression.as(Number.class), value))));
         return this;
     }
 
@@ -126,7 +125,7 @@ class WhereImpl implements Where {
         if (start == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.greaterThanOrEqualTo(expression.as(Date.class), start)));
+        terms.push(new Term(property, ((cb, expression) -> cb.greaterThanOrEqualTo(expression.as(Date.class), start))));
         return this;
     }
 
@@ -135,19 +134,19 @@ class WhereImpl implements Where {
         if (end == null) {
             return this;
         }
-        builders.put(property, ((cb, expression) -> cb.lessThanOrEqualTo(expression.as(Date.class), end)));
+        terms.push(new Term(property, ((cb, expression) -> cb.lessThanOrEqualTo(expression.as(Date.class), end))));
         return this;
     }
 
     @Override
     public Where isNull(String property, boolean isNull) {
-        builders.put(property, ((cb, expression) -> isNull ? expression.isNull() : expression.isNotNull()));
+        terms.push(new Term(property, ((cb, expression) -> isNull ? expression.isNull() : expression.isNotNull())));
         return this;
     }
 
     @Override
     public <S> Where any(String property, Subquery<S> subQuery) {
-        builders.put(property, (cb, expression) -> cb.equal(expression, cb.any(subQuery)));
+        terms.push(new Term(property, (cb, expression) -> cb.equal(expression, cb.any(subQuery))));
         return this;
     }
 
@@ -165,13 +164,18 @@ class WhereImpl implements Where {
         if (position >= 0) {
             sb.append('%');
         }
-        builders.put(property, (cb, expression) -> cb.like(expression.as(String.class), sb.toString()));
+        terms.push(new Term(property, (cb, expression) -> cb.like(expression.as(String.class), sb.toString())));
         return this;
     }
 
     @Override
     public Map<String, CommonBuilder> builders() {
         return builders;
+    }
+
+    @Override
+    public List<Term> terms() {
+        return terms;
     }
 
     @Override

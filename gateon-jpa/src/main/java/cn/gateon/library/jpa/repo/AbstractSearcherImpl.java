@@ -9,7 +9,6 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -87,22 +86,24 @@ public abstract class AbstractSearcherImpl<R> implements Conditional {
     }
 
     private void buildSingleWhere(PredicateBuilder where, From<?, ?> root, List<Predicate> predicates) {
-        Map<String, CommonBuilder> builders = where.builders();
+        List<Term> builders = where.terms();
         Predicate[] predicateArray = new Predicate[builders.size()];
         int i = 0;
-        for (Map.Entry<String, CommonBuilder> entry : builders.entrySet()) {
+
+        for (Term term : builders) {
             Path<?> objectPath;
             if (where instanceof JoinCollectionWhere) {
                 objectPath = root;
             } else {
-                objectPath = root.get(entry.getKey());
+                objectPath = root.get(term.getProperty());
             }
             if (objectPath == null) {
-                throw new GateonException("不存在的字段:" + entry.getKey() + "，请检查是否拼错");
+                throw new GateonException("不存在的字段:" + term.getProperty() + "，请检查是否拼错");
             }
-            predicateArray[i] = entry.getValue().build(cb, objectPath);
+            predicateArray[i] = term.getBuilder().build(cb, objectPath);
             i++;
         }
+
         if (OperatorEnum.AND.equals(where.operator())) {
             predicates.add(cb.and(predicateArray));
         } else if (OperatorEnum.OR.equals(where.operator())) {
