@@ -2,9 +2,12 @@ package cn.gateon.library.repeatsubmit;
 
 import cn.gateon.library.redis.EnableRedis;
 import cn.gateon.library.redis.RedisLockTemplate;
+import cn.gateon.library.repeatsubmit.aop.RepeatAopComponent;
 import cn.gateon.library.repeatsubmit.interceptor.NoRepeatInterceptor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -15,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author qiuyuan
  * @since 1.3
  */
+@Import(RepeatAopComponent.class)
 @EnableRedis
 @EnableConfigurationProperties(RepeatSubmitProperties.class)
 @Configuration
@@ -23,6 +27,7 @@ public class RepeatSubmitConfiguration implements WebMvcConfigurer {
     private RepeatSubmitProperties properties;
 
     private RedisLockTemplate redisLockTemplate;
+
 
     public RepeatSubmitConfiguration(RepeatSubmitProperties properties, RedisLockTemplate redisLockTemplate) {
         this.properties = properties;

@@ -1,6 +1,7 @@
 package cn.gateon.library.repeatsubmit.aop;
 
 import cn.gateon.library.common.exception.GateonException;
+import cn.gateon.library.common.rest.Result;
 import cn.gateon.library.redis.RedisLockTemplate;
 import cn.gateon.library.repeatsubmit.annotation.RepeatValid;
 import cn.hutool.core.util.StrUtil;
@@ -13,6 +14,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
+import sun.security.provider.MD5;
 
 import java.lang.reflect.Method;
 
@@ -54,7 +57,7 @@ public class RepeatAopComponent {
         }
         String md5 = null;
         try {
-            md5 = MD5Encoder.encode(MAPPER.writeValueAsBytes(arg));
+            md5 = DigestUtils.md5DigestAsHex(MAPPER.writeValueAsBytes(arg));
         } catch (JsonProcessingException e) {
             log.error("json序列化失败:", e);
         }
@@ -63,6 +66,6 @@ public class RepeatAopComponent {
                 throw new GateonException("请不要重复操作");
             }
         }
-
     }
+
 }
