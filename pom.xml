@@ -4,21 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.gateon.library</groupId>
-    <artifactId>gateon-library</artifactId>
+    <groupId>site.qiuyuan.library</groupId>
+    <artifactId>qiuyuan-library</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>gateon-jpa</module>
-        <module>gateon-common</module>
-        <module>gateon-library-dependencies</module>
-        <module>gateon-redis</module>
-        <module>gateon-feign</module>
-        <module>gateon-mvc</module>
-        <module>gateon-repeat-submit</module>
-        <module>gateon-amqp</module>
-        <module>gateon-dubbo</module>
-        <module>gateon-xxljob</module>
+        <module>qiuyuan-jpa</module>
+        <module>qiuyuan-common</module>
+        <module>qiuyuan-library-dependencies</module>
+        <module>qiuyuan-redis</module>
+        <module>qiuyuan-feign</module>
+        <module>qiuyuan-mvc</module>
+        <module>qiuyuan-repeat-submit</module>
+        <module>qiuyuan-amqp</module>
+        <module>qiuyuan-dubbo</module>
+        <module>qiuyuan-xxljob</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,11 +47,6 @@
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-core</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-json</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
