@@ -1,6 +1,5 @@
 package site.qiuyuan.library.mvc;
 
-import site.qiuyuan.library.mvc.converter.DateConverter;
 import site.qiuyuan.library.mvc.exceptionhandle.ServiceExceptionHandle;
 import site.qiuyuan.library.mvc.factory.JacksonConverterFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -38,12 +37,6 @@ public class BaseMvcConfiguration implements WebMvcConfigurer {
             resolvers.addAll(platformResolvers);
         }
     }
-
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new DateConverter());
-    }
-
 
     @Bean
     @ConditionalOnClass(MappingJackson2HttpMessageConverter.class)
