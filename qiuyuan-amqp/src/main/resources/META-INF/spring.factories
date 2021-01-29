@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-site.qiuyuan.library.amqp.GateonAmqpConfiguration
+site.qiuyuan.library.amqp.QiuyuanAmqpConfiguration

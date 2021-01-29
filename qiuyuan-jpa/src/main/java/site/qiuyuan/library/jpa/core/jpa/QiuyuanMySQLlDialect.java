@@ -14,9 +14,9 @@ import org.hibernate.type.StringType;
  * @author qiuyuan
  * @since 1.1
  */
-public class GateonMySQLlDialect extends MySQL8Dialect {
+public class QiuyuanMySQLlDialect extends MySQL8Dialect {
 
-    public GateonMySQLlDialect() {
+    public QiuyuanMySQLlDialect() {
         super.registerFunction("convert", new SQLFunctionTemplate(StringType.INSTANCE, "CONVERT(?1 USING ?2)"));
         super.registerFunction("find_in_set", new SQLFunctionTemplate(StringType.INSTANCE, "find_in_set(?1 USING ?2)"));
     }
