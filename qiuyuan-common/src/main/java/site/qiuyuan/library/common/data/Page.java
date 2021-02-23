@@ -25,7 +25,7 @@ public class Page<T> implements Serializable {
     /**
      * 当前页数
      */
-    private int currentPage;
+    private int page;
     /**
      * 总页数
      */
@@ -59,20 +59,20 @@ public class Page<T> implements Serializable {
 
     public Page(List<T> list, int page, int size, long total) {
         this.records = list;
-        this.currentPage = page;
+        this.page = page;
         this.pageSize = size;
         this.total = total;
         this.pages = size == 0 ? 1 : (long) Math.ceil((double) total / size);
-        this.hasNext = this.pages > (this.currentPage);
-        this.hasPrevious = this.currentPage > 1;
+        this.hasNext = this.pages > (this.page);
+        this.hasPrevious = this.page > 1;
     }
 
 
     public <U> Page<U> convert(Function<? super T, ? extends U> function) {
         if (records == null) {
-            return new Page<>(new ArrayList<>(), currentPage, pageSize, total);
+            return new Page<>(new ArrayList<>(), page, pageSize, total);
         }
-        return new Page<>(records.stream().map(function).collect(Collectors.toList()), currentPage, pageSize, total);
+        return new Page<>(records.stream().map(function).collect(Collectors.toList()), page, pageSize, total);
     }
 
 }
