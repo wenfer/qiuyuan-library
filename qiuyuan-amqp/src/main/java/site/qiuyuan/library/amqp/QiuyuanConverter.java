@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
  * @since 2.0
  */
 @Slf4j
-public class GateonConverter extends AbstractMessageConverter {
+public class QiuyuanConverter extends AbstractMessageConverter {
 
     @Override
     protected Message createMessage(Object object, MessageProperties messageProperties) {

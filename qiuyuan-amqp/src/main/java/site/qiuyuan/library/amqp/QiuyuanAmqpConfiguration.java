@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Configuration;
  * @since 2.0
  */
 @Configuration
-public class GateonAmqpConfiguration {
+public class QiuyuanAmqpConfiguration {
 
     @Bean
-    public GateonConverter converter() {
-        return new GateonConverter();
+    public QiuyuanConverter converter() {
+        return new QiuyuanConverter();
     }
 
 }
