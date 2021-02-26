@@ -2,6 +2,7 @@ package site.qiuyuan.library.jpa.searcher;
 
 import site.qiuyuan.library.common.data.Page;
 import site.qiuyuan.library.common.data.PageRequest;
+import site.qiuyuan.library.jpa.specification.Where;
 
 import java.util.List;
 
@@ -19,7 +20,6 @@ public interface Searcher<R> extends Conditional {
     R findOne();
 
     long count();
-
 
     boolean exists();
 

@@ -1,9 +1,9 @@
 package site.qiuyuan.library.jpa.repo;
 
+import org.springframework.util.StringUtils;
 import site.qiuyuan.library.common.exception.QiuyuanException;
 import site.qiuyuan.library.jpa.searcher.Conditional;
 import site.qiuyuan.library.jpa.specification.*;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -61,6 +61,14 @@ public abstract class AbstractSearcherImpl<R> implements Conditional {
     public void where(PredicateBuilder where) {
         this.wheres.add(where);
     }
+
+    @Override
+    public Where newWhere() {
+        Where and = Where.and();
+        this.wheres.add(and);
+        return and;
+    }
+
 
     @Override
     public boolean clear() {

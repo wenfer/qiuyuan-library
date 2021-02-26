@@ -15,6 +15,8 @@ public interface Conditional {
 
     void where(PredicateBuilder where);
 
+    Where newWhere();
+
     boolean clear();
 
     Where and();

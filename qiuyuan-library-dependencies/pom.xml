@@ -45,11 +45,6 @@
             </dependency>
             <dependency>
                 <groupId>site.qiuyuan.library</groupId>
-                <artifactId>qiuyuan-feign</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>site.qiuyuan.library</groupId>
                 <artifactId>qiuyuan-mvc</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -58,7 +53,6 @@
                 <artifactId>qiuyuan-amqp</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

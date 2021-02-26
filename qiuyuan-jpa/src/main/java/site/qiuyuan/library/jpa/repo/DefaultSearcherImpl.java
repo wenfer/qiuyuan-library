@@ -8,6 +8,7 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import site.qiuyuan.library.jpa.specification.Where;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
