@@ -1,14 +1,13 @@
 package site.qiuyuan.library.jpa.repo;
 
-import site.qiuyuan.library.common.data.Page;
-import site.qiuyuan.library.common.data.PageRequest;
-import site.qiuyuan.library.jpa.searcher.Searcher;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.query.criteria.internal.OrderImpl;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import site.qiuyuan.library.jpa.specification.Where;
+import site.qiuyuan.library.common.data.Page;
+import site.qiuyuan.library.common.data.PageRequest;
+import site.qiuyuan.library.jpa.searcher.Searcher;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -58,6 +57,16 @@ class DefaultSearcherImpl<R> extends AbstractSearcherImpl<R> implements Searcher
             throw new NonUniqueResultException(resultList.size());
         }
         return resultList.get(0);
+    }
+
+    @Override
+    public List<R> limit(int start, int limit) {
+        CriteriaQuery<R> query = cb.createQuery(beanClass);
+        Root<R> root = query.from(beanClass);
+        return createQuery(query, root)
+                .setFirstResult(start)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     @Override

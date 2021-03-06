@@ -2,7 +2,6 @@ package site.qiuyuan.library.jpa.searcher;
 
 import site.qiuyuan.library.common.data.Page;
 import site.qiuyuan.library.common.data.PageRequest;
-import site.qiuyuan.library.jpa.specification.Where;
 
 import java.util.List;
 
@@ -18,6 +17,8 @@ public interface Searcher<R> extends Conditional {
     List<R> find();
 
     R findOne();
+
+    List<R> limit(int start, int limit);
 
     long count();
 

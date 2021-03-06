@@ -60,7 +60,6 @@
     </dependencyManagement>
 
 
-
     <distributionManagement>
         <repository>
             <id>ossrh</id>
