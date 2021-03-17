@@ -5,9 +5,8 @@ package site.qiuyuan.library.common.exception;
  * </p>
  *
  * @author qiuyuan
- * @since 1.3.5
  */
-public class ServiceException extends QiuyuanException {
+public class ServiceException extends QiuyuanException implements ExceptionPromotable{
 
     public ServiceException(String message) {
         super(message);
@@ -15,5 +14,10 @@ public class ServiceException extends QiuyuanException {
 
     public ServiceException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    @Override
+    public String promptMsg() {
+        return getMessage();
     }
 }

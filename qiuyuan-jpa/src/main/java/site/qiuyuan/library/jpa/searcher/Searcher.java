@@ -18,8 +18,9 @@ public interface Searcher<R> extends Conditional {
 
     R findOne();
 
-    long count();
+    List<R> limit(int start, int limit);
 
+    long count();
 
     boolean exists();
 

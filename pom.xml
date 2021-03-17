@@ -19,7 +19,6 @@
         <module>qiuyuan-common</module>
         <module>qiuyuan-library-dependencies</module>
         <module>qiuyuan-redis</module>
-        <module>qiuyuan-feign</module>
         <module>qiuyuan-mvc</module>
         <module>qiuyuan-repeat-submit</module>
         <module>qiuyuan-amqp</module>
@@ -59,7 +58,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 
 
     <distributionManagement>

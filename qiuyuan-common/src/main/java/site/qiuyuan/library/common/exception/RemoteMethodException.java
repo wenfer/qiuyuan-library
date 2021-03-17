@@ -8,7 +8,6 @@ import lombok.Getter;
  * </p>
  *
  * @author qiuyuan
- * @since 2.4.3
  */
 @Getter
 public class RemoteMethodException extends QiuyuanException {

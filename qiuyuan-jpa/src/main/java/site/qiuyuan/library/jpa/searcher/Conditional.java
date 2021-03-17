@@ -13,7 +13,9 @@ import site.qiuyuan.library.jpa.specification.Where;
  */
 public interface Conditional {
 
-    void where(PredicateBuilder where);
+    void where(PredicateBuilder...where);
+
+    Where newWhere();
 
     boolean clear();
 

@@ -12,10 +12,7 @@ import com.fasterxml.jackson.databind.type.MapLikeType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -144,6 +141,14 @@ public class JsonUtil {
     public static <T> List<T> toList(String json, Class<T> clazz) {
         try {
             return MAPPER.readValue(json, MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, clazz));
+        } catch (IOException e) {
+            throw new QiuyuanException("解析json失败", e);
+        }
+    }
+
+    public static <T> Set<T> toSet(String json, Class<T> clazz) {
+        try {
+            return MAPPER.readValue(json, MAPPER.getTypeFactory().constructCollectionType(HashSet.class, clazz));
         } catch (IOException e) {
             throw new QiuyuanException("解析json失败", e);
         }

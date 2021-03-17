@@ -75,4 +75,9 @@ public class Page<T> implements Serializable {
         return new Page<>(records.stream().map(function).collect(Collectors.toList()), page, pageSize, total);
     }
 
+
+    public int getCurrentPage(){
+        return page;
+    }
+
 }
