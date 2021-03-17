@@ -7,6 +7,7 @@ import site.qiuyuan.library.jpa.specification.*;
 
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,8 +59,8 @@ public abstract class AbstractSearcherImpl<R> implements Conditional {
     }
 
     @Override
-    public void where(PredicateBuilder where) {
-        this.wheres.add(where);
+    public void where(PredicateBuilder...where) {
+        Collections.addAll(this.wheres, where);
     }
 
     @Override
