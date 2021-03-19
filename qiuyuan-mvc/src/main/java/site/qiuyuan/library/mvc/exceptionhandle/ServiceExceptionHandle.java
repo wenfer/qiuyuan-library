@@ -1,9 +1,5 @@
 package site.qiuyuan.library.mvc.exceptionhandle;
 
-import site.qiuyuan.library.common.exception.QiuyuanException;
-import site.qiuyuan.library.common.exception.RemoteMethodException;
-import site.qiuyuan.library.common.exception.ServiceException;
-import site.qiuyuan.library.common.rest.Result;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
@@ -14,8 +10,13 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import site.qiuyuan.library.common.exception.QiuyuanException;
+import site.qiuyuan.library.common.exception.RemoteMethodException;
+import site.qiuyuan.library.common.exception.ServiceException;
+import site.qiuyuan.library.common.rest.Result;
 
 import javax.security.auth.login.LoginException;
 import java.lang.reflect.Method;
@@ -78,13 +79,13 @@ public class ServiceExceptionHandle {
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<?> bindException(BindException e) {
+    @ResponseBody
+    public Result<?> bindException(BindException e) {
         FieldError fieldError = e.getFieldError();
         if (fieldError == null) {
-            return ResponseEntity.ok(Result.fail("参数绑定失败," + e.getMessage()));
+            return Result.fail(e.getMessage());
         }
-        log.warn("参数绑定失败,字段名:{},值:{}", fieldError.getField(), fieldError.getRejectedValue());
-        return ResponseEntity.ok(Result.fail("参数绑定失败,字段名:" + fieldError.getField() + ",值:" + fieldError.getRejectedValue()));
+        return Result.fail(fieldError.getDefaultMessage());
     }
 
     @ExceptionHandler(InvalidFormatException.class)
