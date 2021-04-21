@@ -22,14 +22,17 @@
         <module>qiuyuan-mvc</module>
         <module>qiuyuan-repeat-submit</module>
         <module>qiuyuan-amqp</module>
-        <module>qiuyuan-dubbo</module>
         <module>qiuyuan-xxljob</module>
+        <module>qiuyuan-mybatis</module>
+        <module>examples</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <hutool.version>5.2.5</hutool.version>
+        <mybatis.version>3.5.6</mybatis.version>
+        <mybatis-spring.version>2.0.6</mybatis-spring.version>
     </properties>
 
     <dependencies>
@@ -48,6 +51,16 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-core</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-spring</artifactId>
+                <version>${mybatis-spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>

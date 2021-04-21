@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:mysql://129.204.19.28:3306/fuli?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: fuli
+    password: CrMNaJWGywTxEP6e
