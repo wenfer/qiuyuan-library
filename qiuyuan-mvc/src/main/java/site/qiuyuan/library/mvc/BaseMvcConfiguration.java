@@ -19,6 +19,7 @@ import java.util.List;
  * @author qiuyuan
  * @since 1.2.5
  */
+@EnableBaseMvc
 @Import(ServiceExceptionHandle.class)
 public class BaseMvcConfiguration implements WebMvcConfigurer {
 
