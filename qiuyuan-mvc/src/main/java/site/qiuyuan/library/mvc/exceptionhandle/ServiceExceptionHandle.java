@@ -1,9 +1,5 @@
 package site.qiuyuan.library.mvc.exceptionhandle;
 
-import site.qiuyuan.library.common.exception.QiuyuanException;
-import site.qiuyuan.library.common.exception.RemoteMethodException;
-import site.qiuyuan.library.common.exception.ServiceException;
-import site.qiuyuan.library.common.rest.Result;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
@@ -16,9 +12,14 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import site.qiuyuan.library.common.exception.QiuyuanException;
+import site.qiuyuan.library.common.exception.RemoteMethodException;
+import site.qiuyuan.library.common.exception.ServiceException;
+import site.qiuyuan.library.common.rest.Result;
 
 import javax.security.auth.login.LoginException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * <p>
@@ -53,7 +54,7 @@ public class ServiceExceptionHandle {
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<?> serviceException(ServiceException ex) {
-        log.error("服务调用异常:", ex);
+        log.error("业务异常:", ex);
         return ResponseEntity.status(500).body(Result.fail(ex.getMessage()));
     }
 
@@ -73,7 +74,7 @@ public class ServiceExceptionHandle {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<?> requestMethodNotSupport(HttpRequestMethodNotSupportedException e) {
-        log.error("不支持的请求方法:", e);
+        log.error("不支持的请求方法:{}，仅支持:{}", e.getMethod(), Arrays.toString(e.getSupportedMethods()));
         return ResponseEntity.ok(Result.fail(e.getLocalizedMessage()));
     }
 
