@@ -10,10 +10,10 @@ package site.qiuyuan.library.common.utils;
  */
 public class SnowflakeUtil {
 
-    private static SnowflakeUtil DEFAULE_OBJ = new SnowflakeUtil(1, 1);
+    private static SnowflakeUtil DEFAULT_OBJ = new SnowflakeUtil(1, 1);
 
     public static long id() {
-        return DEFAULE_OBJ.nextId();
+        return DEFAULT_OBJ.nextId();
     }
 
     /**
@@ -59,9 +59,7 @@ public class SnowflakeUtil {
     }
 
     /**
-     * 产生下一个ID
-     *
-     * @return
+     * 生成id
      */
     public synchronized long nextId() {
         long currStmp = getNewstmp();

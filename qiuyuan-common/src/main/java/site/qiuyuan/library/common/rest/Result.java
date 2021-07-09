@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Getter
 public class Result<T> implements Serializable {
 
-    public static Result SUCCESS = new Result(0, "操作成功");
+    public static Result<Void> SUCCESS = new Result<>(0, "操作成功");
 
     private String msg;
 

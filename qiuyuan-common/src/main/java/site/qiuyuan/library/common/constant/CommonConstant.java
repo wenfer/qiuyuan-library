@@ -9,6 +9,4 @@ package site.qiuyuan.library.common.constant;
  */
 public interface CommonConstant {
 
-    String BLANK_STR = "";
-
 }

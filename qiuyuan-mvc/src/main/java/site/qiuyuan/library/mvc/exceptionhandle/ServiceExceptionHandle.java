@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -20,6 +21,8 @@ import site.qiuyuan.library.common.rest.Result;
 
 import javax.security.auth.login.LoginException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * <p>
@@ -51,10 +54,15 @@ public class ServiceExceptionHandle {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Result.fail(-5, "权限认证失败"));
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return ResponseEntity.ok().body(Result.fail(Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage()));
+    }
+
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<?> serviceException(ServiceException ex) {
-        log.error("服务调用异常:", ex);
+        log.error("业务异常:", ex);
         return ResponseEntity.status(500).body(Result.fail(ex.getMessage()));
     }
 
@@ -74,7 +82,7 @@ public class ServiceExceptionHandle {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<?> requestMethodNotSupport(HttpRequestMethodNotSupportedException e) {
-        log.error("不支持的请求方法:", e);
+        log.error("不支持的请求方法:{}，仅支持:{}", e.getMethod(), Arrays.toString(e.getSupportedMethods()));
         return ResponseEntity.ok(Result.fail(e.getLocalizedMessage()));
     }
 

@@ -41,6 +41,13 @@ public class DslBuilder<T> {
         return booleanBuilder;
     }
 
+    public <V> DslBuilder<T> eq(PathBuilder<?> property, V value) {
+        if (value == null) {
+            return this;
+        }
+        booleanBuilder.and(Expressions.booleanOperation(Ops.EQ, property, ConstantImpl.create(value)));
+        return this;
+    }
 
     public <V> DslBuilder<T> eq(String property, V value) {
         if (value == null) {
