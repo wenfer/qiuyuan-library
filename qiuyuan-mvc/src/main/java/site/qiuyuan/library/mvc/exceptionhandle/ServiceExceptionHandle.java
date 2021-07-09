@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -20,6 +21,7 @@ import site.qiuyuan.library.common.rest.Result;
 import javax.security.auth.login.LoginException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * <p>
@@ -49,6 +51,11 @@ public class ServiceExceptionHandle {
     @ExceptionHandler(LoginException.class)
     public ResponseEntity<?> loginException(LoginException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Result.fail(-5, "权限认证失败"));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return ResponseEntity.ok().body(Result.fail(Objects.requireNonNull(ex.getBindingResult().getFieldError()).getDefaultMessage()));
     }
 
 

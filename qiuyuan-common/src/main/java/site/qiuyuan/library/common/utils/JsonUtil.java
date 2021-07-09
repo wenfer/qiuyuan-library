@@ -1,5 +1,6 @@
 package site.qiuyuan.library.common.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import site.qiuyuan.library.common.exception.QiuyuanException;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -68,6 +69,14 @@ public class JsonUtil {
     }
 
     public static <T> T fromJson(String json, JavaType type) {
+        try {
+            return MAPPER.readValue(json, type);
+        } catch (IOException e) {
+            throw new QiuyuanException("解析json失败", e);
+        }
+    }
+
+    public static <T> T fromJson(String json, TypeReference<T> type) {
         try {
             return MAPPER.readValue(json, type);
         } catch (IOException e) {
